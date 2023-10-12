@@ -17,4 +17,4 @@ const usersSchema = new Schema({
     });
 
 
-export default model("users",usersSchema);
+export default model("Users",usersSchema);
