@@ -10,10 +10,13 @@ import { setupDB } from "./config/db.config.js";
 
 // Importacion de rutas de modelo 'Person'
 import personRoutes from "./api/routes/person.routes.js";
+// Importacion de rutas de modelo 'Grant'
+import grantRoutes from "./api/routes/grant.routes.js";
 
 // Middleware
 app.use(json());
 app.use('/api/persons', personRoutes);
+app.use('/api/grants', grantRoutes);
 
 
 app.get("/", (req, res) => {
