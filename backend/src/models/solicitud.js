@@ -1,6 +1,6 @@
-const { Schema, model } = require('mongoose');
-const Usuario = require('./usuario');
-const Beca = require('./beca');
+import { Schema, model } from 'mongoose';
+import Usuario from './usuario';
+import Beca from './beca';
 
 const solicitudSchema = new Schema({
     usuario: {
@@ -27,5 +27,5 @@ const solicitudSchema = new Schema({
         timestamps: true,
     });
 
-const Solicitud = model("Solicitud", solicitudSchema);
-module.exports = Solicitud;
+// Exportamos el modelo para su debido uso
+export default model ('Solicitud', solicitudSchema);

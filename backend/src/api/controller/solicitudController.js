@@ -1,7 +1,9 @@
+// Se importan los modelos que se van a utilizar
 import Solicitud from "../../models/solicitud";
 import Beca from "../../models/beca";
 import Usuario from "../../models/usuario";
 
+// Crear solicitud de beca
 const crearSolicitud = async (req, res) => {
     try {
         const { usuario, beca, estado, fecha } = req.body;
@@ -18,6 +20,7 @@ const crearSolicitud = async (req, res) => {
     }
 }
 
+// Eliminar solicitud de beca
 const eliminarSolicitud = async (req, res) => {
     try {
         const { id } = req.params;
@@ -32,6 +35,7 @@ const eliminarSolicitud = async (req, res) => {
     }
 }
 
+// Exportar controladores
 export default {
     crearSolicitud,
     eliminarSolicitud

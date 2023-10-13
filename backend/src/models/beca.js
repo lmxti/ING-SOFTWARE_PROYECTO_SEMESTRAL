@@ -1,20 +1,24 @@
-import { Schema as __Schema, model } from "mongoose";
-const Schema = __Schema;
+import { Schema, model } from "mongoose";
 
 const becaSchema = new Schema({
     name: {
         type: String,
+        required: true,
+        unique: true
     },
-    requirement: {
+    requirements: {
         type: String,
+        required: true
     },
-    documents: [{
+    documents: {
         type: String,
-    }],
-    mount: {
+        required: true
+    },
+    amount: {
         type: Number,
+        required: true
     }
 });
 
-const Beca = model("Beca", becaSchema);
-export default Beca;
+// Exportamos el modelo para su debido uso
+export default model ('Beca', becaSchema);

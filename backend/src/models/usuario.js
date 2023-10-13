@@ -1,15 +1,23 @@
-import { Schema as __Schema, model } from "mongoose";
-const Schema = __Schema;
+import { Schema, model } from "mongoose";
 
 const usuarioSchema = new Schema({
     name: {
         type: String,
+        required: true,
+        minLength: 1,
+        maxLength: 50
     },
     surname: {
         type: String,
+        required: true,
+        minLength: 1,
+        maxLength: 50
     },
     rut: {
         type: String,
+        required: true,
+        unique: true,
+        maxLength: 12
     },
     gender: {
         type: String,
@@ -22,12 +30,15 @@ const usuarioSchema = new Schema({
     },
     email: {
         type: String,
+        required: true,
+        unique: true
     },
     password: {
         type: String,
     },
     role: {
         type: String,
+        required: true,
         enum: [
             'admin',
             'user'
@@ -44,5 +55,5 @@ const usuarioSchema = new Schema({
         timestamps: true,
     });
 
-const Usuario = model("Usuario", usuarioSchema);
-export default Usuario;
+// Exportamos el modelo para su debido uso
+export default model ('Usuario', usuarioSchema);

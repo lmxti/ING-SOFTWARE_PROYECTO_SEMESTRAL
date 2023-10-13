@@ -1,6 +1,8 @@
+// Importamos los modelos a utilizar
 import Usuario from '../../models/usuario.js';
 import usuario from '../../models/usuario.js';
 
+// Crear usuario
 const crearUsuario = async (req, res) => {
     try {
         const { name, surname, rut, gender, address, phone, email, password, role, bankAccount, birthDate } = req.body;
@@ -24,6 +26,7 @@ const crearUsuario = async (req, res) => {
     }
 }
 
+// Eliminar usuario
 const eliminarUsuario = async (req, res) => {
     try {
         const { id } = req.params;
@@ -38,6 +41,7 @@ const eliminarUsuario = async (req, res) => {
     }
 }
 
+// Obtener usuarios
 const obtenerUsuarios = async (req, res) => {
     try {
         const usuarios = await usuario.find();
@@ -47,6 +51,7 @@ const obtenerUsuarios = async (req, res) => {
     }
 }
 
+// Actualizar usuario por ID
 const actualizarUsuarioID = async (req, res) => {
     const usuarioActualizado = await Usuario.findByIdAndUpdate(
         req.params.id,
@@ -58,6 +63,7 @@ const actualizarUsuarioID = async (req, res) => {
     res.status(200).json(usuarioActualizado);
 }
 
+// Exportar controladores
 export default {
     crearUsuario,
     eliminarUsuario,

@@ -1,13 +1,15 @@
+// Se importa el modelo que se utiliza
 import Beca from '../../models/beca.js';
 
+// Crear una beca
 const crearBeca = async (req, res) => {
     try {
-        const { name, requirement, documents, mount } = req.body;
+        const { name, requirements, documents, amount } = req.body;
         const nuevaBeca = new Beca({
             name,
-            requirement,
+            requirements,
             documents,
-            mount
+            amount
         });
         await nuevaBeca.save();
         res.status(201).send(nuevaBeca);
@@ -16,6 +18,7 @@ const crearBeca = async (req, res) => {
     }
 }
 
+// Eliminar una beca
 const eliminarBeca = async (req, res) => {
     try {
         const { id } = req.params;
@@ -30,6 +33,7 @@ const eliminarBeca = async (req, res) => {
     }
 }
 
+// Obtener todas las becas
 const obtenerBecas = async (req, res) => {
     try {
         const becas = await Beca.find();
@@ -39,6 +43,7 @@ const obtenerBecas = async (req, res) => {
     }
 }
 
+// Actualizar una beca por ID
 const actualizarBecaID = async (req, res) => {
     const becaActualizada = await Beca.findByIdAndUpdate(
         req.params.id,
@@ -50,6 +55,7 @@ const actualizarBecaID = async (req, res) => {
     res.status(200).json(becaActualizada);
 }
 
+// Exportar controladores
 export default {
     crearBeca,
     eliminarBeca,
