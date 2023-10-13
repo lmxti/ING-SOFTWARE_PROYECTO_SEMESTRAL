@@ -23,7 +23,7 @@ const personSchema = new Schema(
         // Rol de la persona
             role: { type: String, required: true},
         // Cuenta bancaria de la persona
-            bankAccount: { type: String, required: true},
+            bankAccount: { type: String},
     },
     {
         timestamps: true, // Configura las opciones directamente en el segundo argumento del constructor del esquema

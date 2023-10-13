@@ -1,0 +1,30 @@
+Ejemplos de solicitudes
+
+Post-CreatePerson
+{
+	"name": "Domingo",
+	"surname": "Vega",
+	"rut": "20.731.242-8",
+	"gender": "Masculino",
+	"birthdate":"1990-05-15",
+	"address":"Barrio Norte",
+	"phone": "12345678",
+	"email": "domingo.vega1901@alumnos.ubiobio.cl",
+	"password":"domingo1234",
+	"role":"administrador",
+	"bankAccount":""
+}
+<-------------------------------------->
+{
+	"name": "Matias",
+	"surname": "San Martin",
+	"rut": "20.439-342-7",
+	"gender": "Masculino",
+	"birthdate":"1990-05-15",
+	"address":"San pedro de la paz",
+	"phone": "12345678",
+	"email": "matias.san1901@alumnos.ubiobio.cl",
+	"password":"matias1234",
+	"role":"usuario",
+	"bankAccount":""
+}
