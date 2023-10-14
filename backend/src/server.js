@@ -1,5 +1,5 @@
 // Express y funcion 'json' para configurar y manejar solicitudes
-import express, { json } from "express";
+import express, { application, json } from "express";
 // Instancia de la aplicacion express en 'app'
 const app = express();
 // Numero de puerto para la aplicacion
@@ -12,11 +12,15 @@ import { setupDB } from "./config/db.config.js";
 import personRoutes from "./api/routes/person.routes.js";
 // Importacion de rutas de modelo 'Grant'
 import grantRoutes from "./api/routes/grant.routes.js";
+// Importacion de rutas de modelo 'Application'
+import applicationRoutes from "./api/routes/application.routes.js";
 
 // Middleware
 app.use(json());
 app.use('/api/persons', personRoutes);
 app.use('/api/grants', grantRoutes);
+app.use('/api/applications', applicationRoutes);
+
 
 
 app.get("/", (req, res) => {
