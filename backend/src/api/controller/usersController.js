@@ -1,9 +1,13 @@
+import users from "../../models/users.js";
 import Users from "../../models/users.js";
 
+//Crear usuario
 async function createUser(req,res){
     const{
-        nombre,apellido,rut,genero,direccion,
-        telefono,email,contraseña,cuentaBanco,
+        nombre,apellido,
+        rut,genero,direccion,
+        telefono,email,
+        contraseña,cuentaBanco,
         fechaNacimiento
     } = req.body
 
@@ -12,11 +16,29 @@ async function createUser(req,res){
         telefono,email,contraseña,cuentaBanco,
         fechaNacimiento
     })
-    const userSaver=await newUser.save()
-    res.status(201).json(userSaver)
-    /*Poner caso contrario, que no se pueda crear*/
-
+    //Guardar usuario
+    const userSaved=await newUser.save()
+    res.status(201).send(userSaved)
+}
+//Eliminar usuario
+async function deleteUser(req,res){
+    const { userDel }  = req.params;
+    await Users.findByIdAndDelete(userDel);
+    return res.status(200).send
+}
+//Modificar usuario
+async function updateUser(req,res){
+    const userMod = await Users.findByIdAndUpdate(req.params.userMod, req.body);
+    res.status(200).send(userMod)
+}
+//Obtener usuario
+async function getUser(req,res){
+    const userGet = await Users.findById(req.params.userGet)
+    res.status(200).send(userGet)
 }
 module.exports = {
-    createUser
+    createUser,
+    deleteUser,
+    updateUser,
+    getUser,
 };
