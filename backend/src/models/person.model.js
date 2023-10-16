@@ -20,8 +20,6 @@ const personSchema = new Schema(
             email: { type: String, required: true, unique: true},
         // Contrasena
             password: { type: String, required: true},
-        // Rol de la persona
-            role: { type: String, required: true},
         // Cuenta bancaria de la persona
             bankAccount: { type: String},
     },

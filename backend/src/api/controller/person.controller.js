@@ -13,7 +13,6 @@ export const createPerson = async (req, res) => {
     phone,
     email,
     password,
-    role,
     bankAccount,
   } = req.body;
 
@@ -28,7 +27,6 @@ export const createPerson = async (req, res) => {
     phone,      //required
     email,      //required and *unique*
     password,   //required
-    role,       //required
     bankAccount, // not required
   });
 

@@ -3,3 +3,6 @@
 
 
 1. Se instalaron las dependencias: mongoose, dotenv y morgan
+    -> Configuracion de dotenv para leer desde 'config/.env'
+    -> Documentacion de mongoose: https://mongoosejs.com/ para crear 'Schemas' y 'Models'
+    
