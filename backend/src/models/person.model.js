@@ -22,6 +22,8 @@ const personSchema = new Schema(
             password: { type: String, required: true},
         // Cuenta bancaria de la persona
             bankAccount: { type: String},
+        // Rol
+            role: { type: Schema.Types.ObjectId, ref: 'Role'},
     },
     {
         timestamps: true, // Configura las opciones directamente en el segundo argumento del constructor del esquema
