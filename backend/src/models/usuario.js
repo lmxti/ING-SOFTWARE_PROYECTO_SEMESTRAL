@@ -1,59 +1,76 @@
-import { Schema, model } from "mongoose";
+"use strict";
 
-const usuarioSchema = new Schema({
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
+const usuarioSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true,
-        minLength: 1,
-        maxLength: 50
+      type: String,
+      required: true,
+      minLength: 1,
+      maxLength: 50,
     },
     surname: {
-        type: String,
-        required: true,
-        minLength: 1,
-        maxLength: 50
+      type: String,
+      required: true,
+      minLength: 1,
+      maxLength: 50,
     },
     rut: {
-        type: String,
-        required: true,
-        unique: true,
-        maxLength: 12
+      type: String,
+      required: true,
+      unique: true,
+      maxLength: 12,
     },
     gender: {
-        type: String,
+      type: String,
     },
     address: {
-        type: String,
+      type: String,
     },
     phone: {
-        type: String,
+      type: String,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
+      type: String,
     },
-    role: {
-        type: String,
-        required: true,
-        enum: [
-            'admin',
-            'user'
-        ]
-    },
+    roles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Role",
+      },
+    ],
     bankAccount: {
-        type: String,
+      type: String,
     },
     birthdate: {
-        type: Date,
+      type: Date,
     },
-},
-    {
-        timestamps: true,
-    });
+  },
+  {
+    versionKey: false,
+  },
+  {
+    timestamps: true,
+  }
+);
 
-// Exportamos el modelo para su debido uso
-export default model ('Usuario', usuarioSchema);
+userSchema.statics.encryptPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
+};
+
+userSchema.statics.comparePassword = async (password, receivedPassword) => {
+    return await bcrypt.compare(password, receivedPassword);
+};
+
+const Usuario = mongoose.model("Usuario", usuarioSchema);
+
+module.exports = Usuario;
+
