@@ -1,6 +1,7 @@
-import { Schema, model } from 'mongoose';
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const personSchema = new Schema(
+const personSchema = new mongoose.Schema(
     {
         // Nombre de la persona
             name: { type: String, required: true},
@@ -23,7 +24,7 @@ const personSchema = new Schema(
         // Cuenta bancaria de la persona
             bankAccount: { type: String},
         // Rol
-            role: { type: Schema.Types.ObjectId, ref: 'Role'},
+            role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role'},
     },
     {
         timestamps: true, // Configura las opciones directamente en el segundo argumento del constructor del esquema
@@ -31,4 +32,16 @@ const personSchema = new Schema(
     }
 );
 
-export default model('Person', personSchema);
+// Encripta contrasena de persona
+personSchema.statics.encryptPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
+};
+
+// Compara contrasena de persona
+personSchema.statics.comparePassword = async (password, receivedPassword) => {
+    return await bcrypt.compare(password, receivedPassword);
+};
+
+const Person = mongoose.model("Person", personSchema);
+module.exports = Person;

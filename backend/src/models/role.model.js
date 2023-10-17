@@ -1,15 +1,16 @@
 "use strict"
 
-import { Schema, model } from "mongoose"
+const mongoose = require("mongoose");
+const ROLES = require('../constants/roles.constants.js');
 
-const roleSchema = new Schema(
+const roleSchema = new mongoose.Schema(
     {
-        name: { type: String, required: true, enum:["user","admin"]}
+        name: { type: String, required: true, enum: ROLES}
     },
     {
         versionKey: false,
     }
 );
 
-export default model("Role", roleSchema);
-
+const Role = mongoose.model("Role", roleSchema);
+module.exports = Role;

@@ -1,6 +1,7 @@
 "use strict"
 
-import Joi from "joi"
+const Joi = require("joi");
+const ROLES = require("../constants/roles.constants");
 
 /**
  * Esquema de validacion para el cuerpo de la solicitud de usuario
@@ -19,19 +20,29 @@ const personBodySchema = Joi.object({
         "string.base": "El apellido debe ser de tipo texto"
     }),
     rut: Joi.string().required().messages({
-
+        "string.empty": "El rut no puede estar vacio",
+        "any.required": "El rut es un campo requerido",
+        "string.base": "El rut debe ser de tipo texto"
     }),
     gender: Joi.string().required().messages({
-
+        "string.empty": "El genero no puede estar vacio",
+        "any.required": "El genero es un campo requerido",
+        "string.base": "El genero debe ser de tipo texto"
     }),
     birthdate: Joi.date().required().messages({
-
+        "string.empty": "La fecha de nacimiento no puede estar vacia",
+        "any.required": "La fecha de nacimiento es un campo requerido",
+        "string.base": "La fecha de nacimiento debe ser de tipo texto"
     }),
     address: Joi.string().required().messages({
-
+        "string.empty": "La direccion no puede estar vacia",
+        "any.required": "La direccion es un campo requerido",
+        "string.base": "La direccion debe ser de tipo texto"
     }),
     phone: Joi.string().required().messages({
-
+        "string.empty": "El telefono no puede estar vacio",
+        "any.required": "El telefono es un campo requerido",
+        "string.base": "El telefono debe ser de tipo texto"
     }),
     email: Joi.string().required().messages({
         "string.empty": "El correo electronico no puede estar vacio",
@@ -46,7 +57,7 @@ const personBodySchema = Joi.object({
         "string.min": "La contrasena debe tener al menos 5 caracteres"
     }),
     role: Joi.array()
-    .items(Joi.string().valid("user", "admin"))
+    .items(Joi.string().valid(...ROLES))
     .required()
     .messages({
         "string.empty": "El rol no puede estar vacio",
