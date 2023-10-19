@@ -8,20 +8,15 @@ const personSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      minLength: 1,
-      maxLength: 50,
     },
     surname: {
       type: String,
       required: true,
-      minLength: 1,
-      maxLength: 50,
     },
     rut: {
       type: String,
       required: true,
       unique: true,
-      maxLength: 12,
     },
     gender: {
       type: String,

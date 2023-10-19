@@ -4,6 +4,8 @@ const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const indexRoutes = require("./routes/indexRoutes.js");
+const personRoutes = require("./routes/personRoutes.js");
+const authRoutes = require("./routes/authRoutes.js");
 const { setupDB } = require("./config/db.config.js");
 const { handleFatalError, handleError } = require("./utils/errorHandler.js");
 const { createPersons, createRoles } = require("./config/initialSetup.js");
@@ -17,9 +19,11 @@ async function setupServer() {
     server.use(morgan("dev"));
     server.use(express.urlencoded({ extended: true }));
     server.use("/api", indexRoutes);
+    server.use("/api/person", personRoutes);
+    server.use("/api/auth", authRoutes);
 
     server.listen(PORT, () => {
-      console.log(`Server running at http://${HOST}:${PORT}/api`);
+      console.log(`Servidor corriendo en http://${HOST}:${PORT}/api`);
     });
   } catch (error) {
     handleError(error, "/server.js -> setupServer()");
