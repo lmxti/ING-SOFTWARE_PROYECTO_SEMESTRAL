@@ -1,11 +1,19 @@
-import {fileURLToPath} from 'node:url';
-import path from 'node:path';
-import dotenv from 'dotenv';
+"use strict";
+const path = require("path");
+const envFilePath = path.resolve(__dirname, ".env");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const envFilePath = path.resolve(__dirname, '.env');
+require("dotenv").config({ path: envFilePath });
 
-dotenv.config({path: envFilePath});
+const PORT = process.env.PORT;
+const HOST = process.env.HOST;
+const DB_URL = process.env.DB_URL;
+const ACCESS_JWT_SECRET = process.env.ACCESS_JWT_SECRET;
+const REFRESH_JWT_SECRET = process.env.REFRESH_JWT_SECRET;
 
-export const DB_URL = process.env.DB_URL;
+module.exports = {
+  PORT,
+  HOST,
+  DB_URL,
+  ACCESS_JWT_SECRET,
+  REFRESH_JWT_SECRET,
+};

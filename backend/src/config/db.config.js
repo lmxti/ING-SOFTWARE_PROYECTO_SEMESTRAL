@@ -1,9 +1,10 @@
-import { connect } from "mongoose";
-import { DB_URL } from "./env.config.js";
+const mongoose = require("mongoose");
+const { DB_URL } = require("./env.config");
+const { handleError } = require("../utils/errorHandler.js");
 
 const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 };
 
 /**
@@ -13,11 +14,13 @@ const options = {
  * @throws {Error}
  */
 
-export async function setupDB() {
-    try {
-        await connect(DB_URL, options);
-        console.log("Conectado a la base de datos");
-    } catch (error) {
-        console.log('/configDB.js -> setupDB');
-    }
+async function setupDB() {
+  try {
+    await mongoose.connect(DB_URL, options);
+    console.log("Conectado a la base de datos");
+  } catch (error) {
+    handleError(error, "/db.config -> setupDB");
+  }
 }
+
+module.exports = { setupDB };

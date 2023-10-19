@@ -1,10 +1,10 @@
 "use strict";
 
-const { respondSuccess, respondError } = require("../../utils/resHandler");
-const { handleError } = require("../../utils/errorHandler");
+const { respondSuccess, respondError } = require("../utils/resHandler");
+const { handleError } = require("../utils/errorHandler");
 
-const AuthServices = require("../services/authServices");
-const { authLoginBodySchema } = require("../schema/authSchemas");
+const AuthServices = require("../services/authService");
+const { authLoginBodySchema } = require("../schema/authSchema");
 
 async function login(req, res) {
   try {

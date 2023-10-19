@@ -3,7 +3,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const usuarioSchema = new Schema(
+const personSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -26,6 +26,9 @@ const usuarioSchema = new Schema(
     gender: {
       type: String,
     },
+    birthdate: {
+      type: Date,
+    },
     address: {
       type: String,
     },
@@ -40,37 +43,29 @@ const usuarioSchema = new Schema(
     password: {
       type: String,
     },
-    roles: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Role",
-      },
-    ],
     bankAccount: {
       type: String,
     },
-    birthdate: {
-      type: Date,
+    role: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role",
     },
   },
   {
     versionKey: false,
-  },
-  {
     timestamps: true,
   }
 );
 
-userSchema.statics.encryptPassword = async (password) => {
-    const salt = await bcrypt.genSalt(10);
-    return await bcrypt.hash(password, salt);
+personSchema.statics.encryptPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
 };
 
-userSchema.statics.comparePassword = async (password, receivedPassword) => {
-    return await bcrypt.compare(password, receivedPassword);
+personSchema.statics.comparePassword = async (password, receivedPassword) => {
+  return await bcrypt.compare(password, receivedPassword);
 };
 
-const Usuario = mongoose.model("Usuario", usuarioSchema);
+const Person = mongoose.model("Person", personSchema);
 
-module.exports = Usuario;
-
+module.exports = Person;

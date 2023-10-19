@@ -1,7 +1,7 @@
 "use strict";
 
 const mongoose = require("mongoose");
-const ROLES = require("../constants/roles");
+const ROLES = require("../constants/roles").default;
 
 const roleSchema = new mongoose.Schema(
   {
