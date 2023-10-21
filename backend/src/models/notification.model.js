@@ -1,3 +1,4 @@
+opcional
 import { Schema } from "mongoose";
 
 

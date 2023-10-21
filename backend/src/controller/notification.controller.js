@@ -1,42 +1,65 @@
-import Notification from '../models/notification.model';
+const Notification = require('../models/Notification');
 
-//crear notificacion para un usuarios
-export const createNotification = async (req, res) => {
+//Enviar notificación automatica que anuncie el inicio de las postulaciones a becas
+export const sendNotificationInit = async (req, res) => {
     try {
-        const notification = new Notification(req.body);
+        const notification = new Notification({
+            title: 'Postulaciones a becas',
+            description: 'Las postulaciones a becas se encuentran abiertas',
+            status: 'Enviada',
+            user: req.params.id,
+        });
         await notification.save();
         res.status(201).json(notification);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 }
-//obtencion de notificaciones a un usuario
-export const getNotifications = async (req, res) => {
-    try {
-        const notifications = await Notification.find({ user: req.params.id });
-        res.status(200).json(notifications);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
-}
 
-//editar notificacion ya guardada antes de ser enviada
-export const updateNotification = async (req, res) => {
+//Enviar notificación automatica que anuncie el cierre de las postulaciones a becas
+export const sendNotificationEnd = async (req, res) => {
     try {
-        const notification = await Notification.findById(req.params.id);
-        if (notification) {
-            notification.title = req.body.title;
-            notification.description = req.body.description;
-            notification.status = req.body.status;
-            const updatedNotification = await notification.save();
-            res.status(200).json(updatedNotification);
-        } else {
-            res.status(404).json({ message: 'Notificacion no encontrada' });
-        }
+        const notification = new Notification({
+            title: 'Postulaciones a becas',
+            description: 'Las postulaciones a becas se encuentran cerradas',
+            status: 'Enviada',
+            user: req.params.id,
+        });
+        await notification.save();
+        res.status(201).json(notification);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 }
 
+//enviar notificaion de estado de la postulacion a beca (Aprobado, Rechazado, Apelar)
+export const sendNotificationStatus = async (req, res) => {
+    try {
+        const notification = new Notification({
+            title: 'Estado de postulación',
+            description: 'Su postulación a beca ha sido ' + req.body.status,
+            status: 'Enviada',
+            user: req.params.id,
+        });
+        await notification.save();
+        res.status(201).json(notification);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 
-
+//enviar notificacion de resultados apelación de postulacion a beca
+export const sendNotificationAppeal = async (req, res) => {
+    try {
+        const notification = new Notification({
+            title: 'Resultado de apelación',
+            description: 'Su postulación a beca ha sido ' + req.body.status,
+            status: 'Enviada',
+            user: req.params.id,
+        });
+        await notification.save();
+        res.status(201).json(notification);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
