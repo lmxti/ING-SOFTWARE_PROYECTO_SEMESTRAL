@@ -35,7 +35,7 @@ async function createPersons() {
         phone: "12345678",
         email: "user@localhost.com",
         password: await Person.encryptPassword("admin"),
-        roles: [user._id],
+        role: [user._id],
       }).save(),
       new Person({
         name: "admin",
@@ -47,7 +47,7 @@ async function createPersons() {
         phone: "87654321",
         email: "admin@localhost.com",
         password: await Person.encryptPassword("admin"),
-        roles: [admin._id],
+        role: [admin._id],
       }).save(),
     ]);
   } catch (error) {

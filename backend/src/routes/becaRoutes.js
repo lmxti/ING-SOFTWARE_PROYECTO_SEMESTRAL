@@ -1,15 +1,13 @@
 // Importamos los modulos a utilizar
-import {Router} from "express";
-import becaController from "../controller/becaController.js";
-
-// Crear una instancia de Router
-const api = Router();
+const express = require("express");
+const router = express.Router();
+const becaController = require("../controller/becaController.js");
 
 // Definir las rutas
-api.post("/crearBeca", becaController.crearBeca);
-api.delete("/eliminarBeca/:id", becaController.eliminarBeca);
-api.get("/obtenerBecas", becaController.obtenerBecas);
-api.put("/actualizarBeca/:id", becaController.actualizarBecaID);
+router.post("/createBeca", becaController.createBeca);
+router.delete("/deleteBeca/:id", becaController.deleteBeca);
+router.get("/getBecas", becaController.getBecas);
+router.put("/updateBeca/:id", becaController.updateBecaID);
 
 // Exportar las rutas
-export default api;
+module.exports = router;

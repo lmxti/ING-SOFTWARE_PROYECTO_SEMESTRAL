@@ -20,16 +20,11 @@ async function getPersons() {
     }
     return [persons, null];
   } catch (error) {
-    handleError(error, "user.service -> getPersons");
+    handleError(error, "personService -> getPersons");
   }
 }
-// <----------------------------------------------------------------->
-/**
- * Crea una nueva persona en la base de datos
- * @param {Object} req - Objeto de la peticion
- * @param {Object} res - Objeto de la respuesta
- */
-async function createPerson(req, res) {
+
+async function createPerson(person) {
   try {
     const {
       name,
@@ -41,23 +36,21 @@ async function createPerson(req, res) {
       phone,
       email,
       password,
-      bankAccount,
-    } = req.body;
+      role
+    } = person;
 
     // Verificacion de persona en el sistema, por RUT
     const personFound = await Person.findOne({ rut: rut });
     if (personFound) {
-      return res
-        .status(400)
-        .json({ message: "Este rut ya esta asociado a una cuenta" });
+      return [null, "Este rut ya esta asociado a una cuenta"];
     }
 
-    const rolesFound = await Role.find({ name: { $in: ["user"] } });
-    if (rolesFound.length === 0) {
+    const roleFound = await Role.find({ name: { $in: role }});
+    if (roleFound.length === 0) {
       return [null, "El rol no existe"];
     }
 
-    const myRole = rolesFound.map((role) => role._id);
+    const myRole = roleFound.map((role) => role._id);
 
     const newPerson = new Person({
       name, //required
@@ -69,13 +62,12 @@ async function createPerson(req, res) {
       phone, //required
       email, //required and *unique*
       password: await Person.encryptPassword(password), //required
-      bankAccount, // not required (pending)
-      roles: myRole,
+      role: myRole,
     });
     await newPerson.save();
     return [newPerson, null];
   } catch (error) {
-    handleError(error, "user.service -> createPerson");
+    handleError(error, "personService -> createPerson");
   }
 }
 // <----------------------------------------------------------------->
@@ -88,7 +80,7 @@ async function getPersonById(id) {
   try {
     const person = await Person.findById({ _id: id })
       .select("-password")
-      .populate("roles")
+      .populate("role")
       .exec();
     // Verificacion de persona en la base de datos, por ID
     if (!person) {
@@ -96,7 +88,7 @@ async function getPersonById(id) {
     }
     return [person, null];
   } catch (error) {
-    handleError(error, "user.service -> getPersonById");
+    handleError(error, "personService -> getPersonById");
   }
 }
 // <----------------------------------------------------------------->
@@ -124,7 +116,6 @@ async function updatePersonById(id, req) {
       phone,
       email,
       password,
-      bankAccount,
     } = req.body;
 
     // Verificacion de contrasena
@@ -150,14 +141,13 @@ async function updatePersonById(id, req) {
         phone,
         email,
         password: await Person.encryptedPassword(newPassword || password),
-        bankAccount,
-        roles: myRole,
+        role: myRole,
       },
       { new: true }
     );
     return [personUpdated, null];
   } catch (error) {
-    handleError(error, "user.service -> updatePerson");
+    handleError(error, "personService -> updatePerson");
   }
 }
 // <----------------------------------------------------------------->
@@ -171,7 +161,7 @@ async function deletePersonById(id) {
     try{
         return await Person.findByIdAndDelete(id);
     }catch(error){
-        handleError(error, "user.service -> deletePerson");
+        handleError(error, "personService -> deletePerson");
     }
 };
 

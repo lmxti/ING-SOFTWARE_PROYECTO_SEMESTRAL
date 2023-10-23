@@ -41,10 +41,12 @@ const personSchema = new mongoose.Schema(
     bankAccount: {
       type: String,
     },
-    role: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Role",
-    },
+    role: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Role",
+      },
+    ],
   },
   {
     versionKey: false,

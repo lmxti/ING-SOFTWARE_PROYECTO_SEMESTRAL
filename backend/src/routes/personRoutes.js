@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.use(authenticationMiddleware);
 
-router.get("/", personController.getPersons);
-router.post("/", authorizationMiddleware, personController.createPerson);
+router.get("/getPersons", personController.getPersons);
+router.post("/createPersons", authorizationMiddleware, personController.createPerson);
 
 module.exports = router;

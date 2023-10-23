@@ -1,24 +1,30 @@
-import { Schema, model } from "mongoose";
+const mongoose = require("mongoose");
 
-const becaSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    requirements: {
-        type: String,
-        required: true
-    },
-    documents: {
-        type: String,
-        required: true
-    },
-    amount: {
-        type: Number,
-        required: true
+const becaSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        requirements: [{
+            type: String,
+            required: true,
+        }],
+        documents: [{
+            type: String,
+            required: true,
+        }],
+        amount: {
+            type: Number,
+            required: true,
+        },
+        state: {
+            type: String,
+            required: true,
+        },
     }
-});
+)
 
-// Exportamos el modelo para su debido uso
-export default model ('Beca', becaSchema);
+const Beca = mongoose.model("Beca", becaSchema);
+
+module.exports = Beca;

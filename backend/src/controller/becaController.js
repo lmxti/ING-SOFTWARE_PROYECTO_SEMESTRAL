@@ -1,64 +1,77 @@
 // Se importa el modelo que se utiliza
-import Beca from '../../models/beca.js';
+const { respondSuccess, respondError } = require("../utils/resHandler.js");
+const BecaService = require("../services/becaService.js");
+const { becaBodySchema, becaIdSchema } = require("../schema/becaSchema.js");
+const { handleError } = require("../utils/errorHandler.js");
 
 // Crear una beca
-const crearBeca = async (req, res) => {
-    try {
-        const { name, requirements, documents, amount } = req.body;
-        const nuevaBeca = new Beca({
-            name,
-            requirements,
-            documents,
-            amount
-        });
-        await nuevaBeca.save();
-        res.status(201).send(nuevaBeca);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+async function createBeca(req, res) {
+  try {
+    const { body } = req;
+    const { error: bodyError } = becaBodySchema.validate(body);
+    if (bodyError) {
+      return respondError(req, res, 400, bodyError.message);
     }
+    if (!newBeca) {
+      return respondError(req, res, 400, "No se pudo crear la beca");
+    }
+    respondSuccess(req, res, 201, newBeca);
+  } catch (error) {
+    handleError(error, "becaController -> createBeca");
+    respondError(req, res, 400, error.message);
+  }
 }
 
 // Eliminar una beca
-const eliminarBeca = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const becaAEliminar = await Beca.findByIdAndDelete(id);
-        if (becaAEliminar) {
-            res.status(204).send();
-        } else {
-            res.status(404).json({ error: 'Beca no encontrada' });
-        }
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+async function deleteBeca(req, res) {
+  try {
+    const { params } = req;
+    const { error: paramsError } = becaIdSchema.validate(params);
+    if (paramsError) {
+      return respondError(req, res, 404, paramsError.message);
     }
+    respondSuccess(req, res, 200, beca);
+  } catch (error) {
+    handleError(error, "becaController -> deleteBeca");
+    respondError(req, res, 400, error.message);
+  }
 }
 
 // Obtener todas las becas
-const obtenerBecas = async (req, res) => {
-    try {
-        const becas = await Beca.find();
-        res.status(200).json(becas);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+async function getBecas(req, res) {
+  try {
+    const [becas, becasError] = await BecaService.getBecas();
+    if (becasError) {
+      return respondError(req, res, 400, becasError);
     }
+    becas.length === 0
+      ? respondSuccess(req, res, 200, "No hay becas registradas")
+      : respondSuccess(req, res, 200, becas);
+  } catch (error) {
+    handleError(error, "becaController -> getBecas");
+    respondError(req, res, 400, error.message);
+  }
 }
 
 // Actualizar una beca por ID
-const actualizarBecaID = async (req, res) => {
-    const becaActualizada = await Beca.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        {
-            new: true,
-        }
-    );
-    res.status(200).json(becaActualizada);
+async function updateBecaID(req, res) {
+  try {
+    const { params, body } = req;
+    const { error: paramsError } = becaIdSchema.validate(body);
+    if (paramsError) {
+      return respondError(req, res, 404, paramsError.message);
+    }
+    respondSuccess(req, res, 200, beca);
+  } catch (error) {
+    handleError(error, "becaController -> updateBecaID");
+    respondError(req, res, 400, error.message);
+  }
 }
 
 // Exportar controladores
-export default {
-    crearBeca,
-    eliminarBeca,
-    obtenerBecas,
-    actualizarBecaID
+module.exports = {
+  createBeca,
+  deleteBeca,
+  getBecas,
+  updateBecaID,
 };
