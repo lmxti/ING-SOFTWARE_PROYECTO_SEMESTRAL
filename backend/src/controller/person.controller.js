@@ -5,6 +5,7 @@ const {
   personIdSchema,
 } = require("../schema/person.schema.js");
 const { handleError } = require("../utils/errorHandler.js");
+const Person = require("../models/person.model.js");
 
 // <----------------------------- Obtener todas las personas ----------------------------->
 /**
@@ -19,11 +20,19 @@ async function getPersons(req, res) {
     const [persons, errorPersons] = await PersonService.getPersons();
     // Verificacion de errores
     if (errorPersons) {
-      return respondError(res,500,"Error al obtener las personas",errorPersons);
+      return respondError(
+        res,
+        500,
+        "Error al obtener las personas",
+        errorPersons
+      );
     }
     persons.length === 0
-        ? respondSuccess(req, res, 200, "No hay personas registradas")
-        : respondSuccess(req, res, 200, "Personas obtenidas con exito", persons)
+      ? respondSuccess(req, res, 200, "No hay personas registradas")
+      : respondSuccess(req, res, 200, {
+          message: "Personas obtenidas con exito",
+          data: persons,
+        });
   } catch (error) {
     handleError(error, "person.controller -> getPersons");
     respondError(req, res, 400, error.message);
@@ -41,20 +50,17 @@ async function getPersons(req, res) {
 async function createPerson(req, res) {
   try {
     const { body } = req;
-    // Validacion de datos
+    // Validacion de campos de body
     const { error: bodyError } = personBodySchema.validate(body);
-    if (bodyError) {
-      return respondError(req, res, 400, bodyError.message);
-    }
+    if (bodyError) return respondError(req, res, 400, bodyError.message);
+
     const [newPerson, personError] = await PersonService.createPerson(body);
-    // Verificacion de errores
-    if (personError) {
-      return respondError(req, res, 400, personError);
-    }
-    // Validacion que newPerson no sea null
-    if (!newPerson) {
-      return respondError(req, res, 400, "No se creo la persona");
-    }
+    // Error de createPerson
+    if (personError) return respondError(req, res, 400, personError);
+    // Error si no hay datos (false)
+    if (!newPerson) return respondError(req, res, 400, "No se creo el usuario");
+    // Se crea un usuario y se responde con 201
+    respondSuccess(req, res, 201, newPerson);
   } catch (error) {
     handleError(error, "person.controller -> createPerson");
     respondError(req, res, 500, "No se creo la persona");

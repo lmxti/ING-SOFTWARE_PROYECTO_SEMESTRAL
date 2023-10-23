@@ -1,0 +1,48 @@
+    const {
+      name,
+      surname,
+      rut,
+      gender,
+      birthdate,
+      address,
+      phone,
+      email,
+      password,
+    } = req.body;
+    // Verificacion de persona en el sistema, por RUT
+    const personFound = await Person.findOne({ rut: rut });
+    console.log(personFound);
+
+    
+    // Verificacion si ya existe una persona con este rut en la base de datos
+    if (personFound !== null) {
+      return res.status(400).json({ message: "Este rut ya esta asociado a una cuenta" });
+    }
+  
+    // Verificacion de validez de rol ingresado
+    const rolesFound = await Role.find({ name: { $in: ["user"] } });
+    if (rolesFound.length === 0) {
+      return [null, "El rol no existe"];
+    }
+
+    const myRole = rolesFound.map((role) => role._id);
+    console.log(myRole);
+
+    const newPerson = new Person({
+      name, 
+      surname, 
+      rut, 
+      gender, 
+      birthdate, 
+      address, 
+      phone, 
+      email,
+      password: await Person.encryptPassword(password),
+      role: myRole,
+    });
+
+    await newPerson.save();
+    console.log("Se creo una persona");
+  } catch (error) {
+    handleError(error, "person.service -> createPerson");
+  }

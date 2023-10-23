@@ -1,0 +1,21 @@
+  try {
+    // console.log(req.body);
+    // Validacion de datos
+    const { error: bodyError } = personBodySchema.validate(req.body);
+    // Verificacion de errores de body
+    if (bodyError) return respondError(req, res, 400, bodyError.message);
+    // Creacion de persona
+    const [newPerson, personError] = await PersonService.createPerson(req);
+    // Verificacion de errores
+    if (personError) {
+      return respondError(req, res, 400, personError);
+    }
+    // Validacion que newPerson no sea null
+    if (!newPerson) {
+      return respondError(req, res, 400, "No se creo la persona");
+    }
+  } catch (error) {
+    handleError(error, "person.controller -> createPerson");
+    // Este error me esta entrando
+    respondError(req, res, 500, "No se creo la persona");
+  }

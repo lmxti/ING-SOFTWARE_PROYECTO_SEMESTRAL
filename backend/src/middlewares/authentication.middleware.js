@@ -20,7 +20,7 @@ const verifyJWT = (req, res, next) => {
         res,
         401,
         "No autorizado",
-        "No hay token valido"
+        "No hay un token o es invalido"
       );
     }
 

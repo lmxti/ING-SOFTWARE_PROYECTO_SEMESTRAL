@@ -25,13 +25,13 @@ async function isAdmin(req, res, next) {
       req,
       res,
       401,
-      "Se requiere un rol de administrador para realizar esta acción",
+      "Se requiere un rol de administrador para realizar esta acción"
     );
   } catch (error) {
     handleError(error, "authorization.middleware -> isAdmin");
   }
 }
-
+// 
 module.exports = {
   isAdmin,
 };

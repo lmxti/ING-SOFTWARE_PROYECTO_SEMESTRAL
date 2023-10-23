@@ -25,11 +25,11 @@ async function getPersons() {
 }
 // <----------------------------------------------------------------->
 /**
- * Crea una nueva persona en la base de datos
- * @param {Object} req - Objeto de la peticion
- * @param {Object} res - Objeto de la respuesta
+ * Crea un nuevo usuario en la base de datos
+ * @param {Object} user Objeto de usuario
+ * @returns {Promise} Promesa con el objeto de usuario creado
  */
-async function createPerson(req, res) {
+async function createPerson(user) {
   try {
     const {
       name,
@@ -41,41 +41,37 @@ async function createPerson(req, res) {
       phone,
       email,
       password,
-      bankAccount,
-    } = req.body;
+      role
+    } = user;
 
-    // Verificacion de persona en el sistema, por RUT
-    const personFound = await Person.findOne({ rut: rut });
-    if (personFound) {
-      return res
-        .status(400)
-        .json({ message: "Este rut ya esta asociado a una cuenta" });
-    }
-
-    const rolesFound = await Role.find({ name: { $in: ["user"] } });
-    if (rolesFound.length === 0) {
+    // Verificacion de existencia de persona en la base de datos
+    const personFound = await Person.findOne({ rut: rut});
+    if (personFound) return [null, "El usuario ya existe"];
+    // Verificacion de rol de la persona en la base de datos
+    const roleFound = await Role.find({ name: { $in: role}});
+    if (roleFound.length === 0) {
       return [null, "El rol no existe"];
     }
-
-    const myRole = rolesFound.map((role) => role._id);
+    // Almacenamiento del id de rol de la persona
+    const myRole = roleFound.map( (role) => role._id);
 
     const newPerson = new Person({
-      name, //required
-      surname, //required
-      rut, //required and *unique*
-      gender, //required
-      birthdate, //required
-      address, //required
-      phone, //required
-      email, //required and *unique*
-      password: await Person.encryptPassword(password), //required
-      bankAccount, // not required (pending)
-      roles: myRole,
-    });
+      name,
+      surname,
+      rut,
+      gender,
+      birthdate,
+      address,
+      phone,
+      email,
+      password: await Person.encryptPassword(password),
+      role: myRole
+    })
+    // Guardado de persona en la base de datos
     await newPerson.save();
     return [newPerson, null];
-  } catch (error) {
-    handleError(error, "user.service -> createPerson");
+  } catch(error){
+    handleError(error, "person.service -> createPerson");
   }
 }
 // <----------------------------------------------------------------->
@@ -88,7 +84,7 @@ async function getPersonById(id) {
   try {
     const person = await Person.findById({ _id: id })
       .select("-password")
-      .populate("roles")
+      .populate("role")
       .exec();
     // Verificacion de persona en la base de datos, por ID
     if (!person) {
@@ -151,7 +147,7 @@ async function updatePersonById(id, req) {
         email,
         password: await Person.encryptedPassword(newPassword || password),
         bankAccount,
-        roles: myRole,
+        role: myRole,
       },
       { new: true }
     );
