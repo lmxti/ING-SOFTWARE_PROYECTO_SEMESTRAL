@@ -1,13 +1,11 @@
-// Importamos los modulos a utilizar
-import { Router } from "express";
-import solicitudController from "../controller/solicitudController.js";
-
-// Crear una instancia de Router
-const api = Router();
+// Importacion de los modulos a utilizar
+const express = require("express");
+const router = express.Router();
+const solicitudController = require("../controller/solicitudController.js");
 
 // Definir las rutas
-api.post("/crearSolicitud", solicitudController.crearSolicitud);
-api.delete("/eliminarSolicitud/:id", solicitudController.eliminarSolicitud);
+router.post("/createSolicitud", solicitudController.createSolicitud);
+router.get("/getSolicitudes", solicitudController.getSolicitudes);
 
 // Exportar las rutas
-export default api;
+module.exports = router;

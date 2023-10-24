@@ -1,31 +1,22 @@
-import { Schema, model } from 'mongoose';
-import Usuario from './usuario';
-import Beca from './beca';
+const mongoose = require('mongoose');
 
-const solicitudSchema = new Schema({
-    usuario: {
-        type: Schema.Types.ObjectId,
-        ref: Usuario,
+const solicitudSchema = new mongoose.Schema({
+    person: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Person',
+        required: true
     },
     beca: {
-        type: Schema.Types.ObjectId,
-        ref: Beca,
-    },
-    estado: {
-        type: String,
-        enum: [
-            'pendiente',
-            'aceptada',
-            'rechazada',
-        ]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Beca',
+        required: true
     },
     fecha: {
         type: Date,
-    },
-},
-    {
-        timestamps: true,
-    });
+        default: Date.now
+    }
+});
 
-// Exportamos el modelo para su debido uso
-export default model ('Solicitud', solicitudSchema);
+const Solicitud = mongoose.model('Solicitud', solicitudSchema);
+
+module.exports = Solicitud;

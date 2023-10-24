@@ -12,6 +12,10 @@ async function createBeca(req, res) {
     if (bodyError) {
       return respondError(req, res, 400, bodyError.message);
     }
+    const [newBeca, becaError] = await BecaService.createBeca(body);
+    if (becaError) {
+      return respondError(req, res, 400, becaError);
+    }
     if (!newBeca) {
       return respondError(req, res, 400, "No se pudo crear la beca");
     }

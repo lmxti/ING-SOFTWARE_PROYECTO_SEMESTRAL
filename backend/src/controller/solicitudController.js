@@ -1,42 +1,47 @@
-// Se importan los modelos que se van a utilizar
-import Solicitud from "../../models/solicitud";
-import Beca from "../../models/beca";
-import Usuario from "../../models/usuario";
+const {respondSuccess, respondError} = require('../utils/resHandler.js');
+const SolicitudService = require('../services/solicitudService.js');
+const {solicitudBodySchema, solicitudIdSchema} = require('../schema/solicitudSchema.js');
+const {handleError} = require('../utils/errorHandler.js');
 
-// Crear solicitud de beca
-const crearSolicitud = async (req, res) => {
-    try {
-        const { usuario, beca, estado, fecha } = req.body;
-        const nuevaSolicitud = new Solicitud({
-        usuario,
-        beca,
-        estado,
-        fecha,
-        });
-        await nuevaSolicitud.save();
-        res.status(201).send(nuevaSolicitud);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-}
-
-// Eliminar solicitud de beca
-const eliminarSolicitud = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const solicitudAEliminar = await Solicitud.findByIdAndDelete(id);
-        if (solicitudAEliminar) {
-            res.status(204).send();
-        } else {
-            res.status(404).json({ error: 'Solicitud no encontrada' });
+// Crear una solicitud
+async function createSolicitud(req, res) {
+    try{
+        const {body} = req;
+        const {error: bodyError} = solicitudBodySchema.validate(body);
+        if(bodyError){
+            return respondError(req, res, 400, bodyError.message);
         }
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+        const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body);
+        if(solicitudError){
+            return respondError(req, res, 400, solicitudError);
+        }
+        if(!newSolicitud){
+            return respondError(req, res, 400, 'No se pudo crear la solicitud');
+        }
+        respondSuccess(req, res, 201, newSolicitud);
+    }catch(error){
+        handleError(error, 'solicitudController -> createSolicitud');
+        respondError(req, res, 400, error.message);
     }
 }
 
-// Exportar controladores
-export default {
-    crearSolicitud,
-    eliminarSolicitud
+// Obtener todas las solicitudes
+async function getSolicitudes(req, res) {
+    try{
+        const [solicitudes, solicitudesError] = await SolicitudService.getSolicitudes();
+        if(solicitudesError){
+            return respondError(req, res, 400, solicitudesError);
+        }
+        solicitudes.length === 0
+            ? respondSuccess(req, res, 200, 'No hay solicitudes registradas')
+            : respondSuccess(req, res, 200, solicitudes);
+    }catch(error){
+        handleError(error, 'solicitudController -> getSolicitudes');
+        respondError(req, res, 400, error.message);
+    }
 }
+
+module.exports = {
+    createSolicitud,
+    getSolicitudes
+};
