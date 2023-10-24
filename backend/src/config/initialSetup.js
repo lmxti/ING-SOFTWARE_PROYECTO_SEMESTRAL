@@ -1,7 +1,7 @@
 "use strict";
 // Importa el modelo de datos 'Role'
 const Role = require("../models/role.model.js");
-const Users = require("../models/users.model.js");
+const User = require("../models/user.model.js");
 
 /**
  * Crea los roles por defecto en la base de datos.
@@ -34,23 +34,23 @@ async function createRoles() {
  */
 async function createUsers() {
   try {
-    const count = await Users.estimatedDocumentCount();
+    const count = await User.estimatedDocumentCount();
     if (count > 0) return;
 
     const admin = await Role.findOne({ name: "admin" });
     const user = await Role.findOne({ name: "user" });
 
     await Promise.all([
-      new Users({
+      new User({
         username: "user",
         email: "user@email.com",
         password: await User.encryptPassword("user123"),
         roles: user._id,
       }).save(),
-      new Users({
+      new User({
         username: "admin",
         email: "admin@email.com",
-        password: await Users.encryptPassword("admin123"),
+        password: await User.encryptPassword("admin123"),
         roles: admin._id,
       }).save(),
     ]);

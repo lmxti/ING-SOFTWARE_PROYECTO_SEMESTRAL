@@ -12,7 +12,7 @@ const becasSchema = new Schema({
     },
     documentos:{
         type: String,
-        required: trusted
+        required: true
     },
     monto:{
         type: Number,

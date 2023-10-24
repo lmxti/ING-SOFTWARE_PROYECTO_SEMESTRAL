@@ -1,6 +1,6 @@
 "use strict";
 // Importa el modelo de datos 'User'
-const User = require("../models/users.model.js");
+const User = require("../models/user.model.js");
 const Role = require("../models/role.model.js");
 const { handleError } = require("../utils/errorHandler.js");
 
@@ -10,7 +10,7 @@ const { handleError } = require("../utils/errorHandler.js");
  */
 async function getUsers() {
   try {
-    const users = await Users.find()
+    const users = await User.find()
       .select("-password")
       .populate("roles")
       .exec();

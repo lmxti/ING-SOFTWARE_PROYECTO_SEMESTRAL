@@ -11,7 +11,7 @@ const {
   REFRESH_JWT_SECRET,
 } = require("../config/configEnv.js");
 
-const { handleError } = require("../utils/errorHandler.js");
+const { handleError } = require("../utils/errorHandler");
 
 /**
  * Inicia sesión con un usuario.

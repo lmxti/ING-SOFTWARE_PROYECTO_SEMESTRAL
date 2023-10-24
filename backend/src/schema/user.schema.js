@@ -1,44 +1,61 @@
 "use strict";
 
 const Joi = require("joi");
-const ROLES = require("../constants/roles.constants");
+const ROLES = require("../constants/roles.constants.js");
 
 /**
  * Esquema de validación para el cuerpo de la solicitud de usuario.
  * @constant {Object}
  */
 const userBodySchema = Joi.object({
-  username: Joi.string().required().messages({
+  nombre: Joi.string().required().messages({
     "string.empty": "El nombre de usuario no puede estar vacío.",
     "any.required": "El nombre de usuario es obligatorio.",
     "string.base": "El nombre de usuario debe ser de tipo string.",
   }),
-  password: Joi.string().required().min(5).messages({
-    "string.empty": "La contraseña no puede estar vacía.",
-    "any.required": "La contraseña es obligatoria.",
-    "string.base": "La contraseña debe ser de tipo string.",
-    "string.min": "La contraseña debe tener al menos 5 caracteres.",
+  contrasenia: Joi.string().required().min(5).messages({
+    "string.empty": "La contrasenia no puede estar vacia",
+    "any.required": "La contrasenia es un campo requerido",
+    "string.base": "La contrasenia debe ser de tipo texto",
+    "string.min": "La contrasenia debe tener al menos 5 caracteres",
   }),
-  email: Joi.string().email().required().messages({
-    "string.empty": "El email no puede estar vacío.",
-    "any.required": "El email es obligatorio.",
-    "string.base": "El email debe ser de tipo string.",
-    "string.email": "El email debe tener un formato válido.",
+  apellido: Joi.string().required().messages({
+    "string.empty": "El apellido no puede estar vacio",
+    "any.required": "El apellido es un campo requerido",
+    "string.base": "El apellido debe ser de tipo texto",
   }),
-  roles: Joi.array()
-    .items(Joi.string().valid(...ROLES))
-    .required()
-    .messages({
-      "array.base": "El rol debe ser de tipo array.",
-      "any.required": "El rol es obligatorio.",
-      "string.base": "El rol debe ser de tipo string.",
-      "any.only": "El rol proporcionado no es válido.",
-    }),
-  newPassword: Joi.string().min(5).messages({
-    "string.empty": "La contraseña no puede estar vacía.",
-    "string.base": "La contraseña debe ser de tipo string.",
-    "string.min": "La contraseña debe tener al menos 5 caracteres.",
+  rut: Joi.string().required().messages({
+    "string.empty": "El rut no puede estar vacio",
+    "any.required": "El rut es un campo requerido",
+    "string.base": "El rut debe ser de tipo texto",
   }),
+  sexo: Joi.string().required().messages({
+    "string.empty": "El genero no puede estar vacio",
+    "any.required": "El genero es un campo requerido",
+    "string.base": "El genero debe ser de tipo texto",
+  }),
+  fechaNacimiento: Joi.date().required().messages({
+    "string.empty": "La fecha de nacimiento no puede estar vacia",
+    "any.required": "La fecha de nacimiento es un campo requerido",
+    "string.base": "La fecha de nacimiento debe ser de tipo texto",
+  }),
+  direccion: Joi.string().required().messages({
+    "string.empty": "La direccion no puede estar vacia",
+    "any.required": "La direccion es un campo requerido",
+    "string.base": "La direccion debe ser de tipo texto",
+  }),
+  telefono: Joi.string().required().messages({
+    "string.empty": "El telefono no puede estar vacio",
+    "any.required": "El telefono es un campo requerido",
+    "string.base": "El telefono debe ser de tipo texto",
+  }),
+  correo: Joi.string().required().messages({
+    "string.empty": "El correo electronico no puede estar vacio",
+    "any.required": "El correo electronico es un campo requerido",
+    "string.base": "El correo electronico debe ser de tipo texto",
+    "string.email": "El correo electronico debe ser valido",
+  }),
+  
 }).messages({
   "object.unknown": "No se permiten propiedades adicionales.",
 });

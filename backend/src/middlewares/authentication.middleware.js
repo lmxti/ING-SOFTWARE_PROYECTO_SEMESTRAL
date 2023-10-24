@@ -1,8 +1,8 @@
 "use strict";
 
 const jwt = require("jsonwebtoken");
-const { ACCESS_JWT_SECRET } = require("../config/configEnv");
-const { respondError } = require("../utils/resHandler");
+const { ACCESS_JWT_SECRET } = require("../config/configEnv.js");
+const { respondError } = require("../utils/resHandler.js");
 /**
  * Verifica el token de acceso
  * @param {Object} req - Objeto de petición
