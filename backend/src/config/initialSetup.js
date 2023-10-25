@@ -48,9 +48,9 @@ async function createPersons(){
 
         await Promise.all([
             // Nueva persona de rol usuario
-            new Person({ name: "user", surname: "null", rut: "00.000.000-0", gender: "Masculino", birthdate: "1990-05-15",address:"null",phone:"12345678", email: "user@localhost.com", password: await Person.encryptPassword("admin"), roles: [user._id] }).save(),
+            new Person({ name: "user", surname: "null", rut: "00.000.000-0", gender: "Masculino", birthdate: "1990-05-15",address:"null",phone:"12345678", email: "user@localhost.com", password: await Person.encryptPassword("admin"), role: [user._id] }).save(),
             // Nueva persona de rol administrador
-            new Person({ name: "admin", surname: "null", rut: "11.111.111-1", gender: "Masculino", birthdate: "1990-05-15",address:"null",phone:"87654321", email: "admin@localhost.com", password: await Person.encryptPassword("admin"), roles: [admin._id] }).save()
+            new Person({ name: "admin", surname: "null", rut: "11.111.111-1", gender: "Masculino", birthdate: "1990-05-15",address:"null",phone:"87654321", email: "admin@localhost.com", password: await Person.encryptPassword("admin"), role: [admin._id] }).save()
         ]);
         console.log("Se han creado los usuarios por defecto, 1 administrador y 1 usuario");
     } catch (error) {

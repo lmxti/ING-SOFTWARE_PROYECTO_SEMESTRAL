@@ -15,6 +15,7 @@ async function isAdmin(req, res, next) {
   try {
     const person = await Person.findOne({ email: req.email });
     const role = await Role.find({ _id: { $in: person.role } });
+    console.log(person + "XDDDD Y EL ROL ES: " + role);
     for (let i = 0; i < role.length; i++) {
       if (role[i].name === "admin") {
         next();
