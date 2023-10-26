@@ -1,7 +1,7 @@
-const { respondSucces, respondError } = require("../utils/errors");
-const AppealService = require("../services/appeal.service");
-const { handleError } = require("../utils/errorHandler");
-
+const { respondSuccess, respondError } = require("../utils/resHandler.js");
+//const AppealService = require("../services/appeal.service.js");
+const { handleError } = require("../utils/errorHandler.js");
+//const { appealBodySchema } = require("../schema/appeal.schema.js");
 
 
 //controlador para crear una nueva apelacion
