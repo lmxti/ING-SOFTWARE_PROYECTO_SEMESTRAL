@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 
 const appealSchema = new mongoose.Schema({
-    //razon
-    reason : {
-        type: String,
+    //usuario
+    user: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Person',
         required: true,
     },
     //estado
@@ -13,11 +13,20 @@ const appealSchema = new mongoose.Schema({
         enum: ['Aceptado', 'Rechazado', 'Pendiente'],
         default: 'Pendiente',
     },
-    //fecha apelacion
-    appealDate: {
+    //motivo de la apelación
+    reason : {
+        type: String,
+        required: true,
+    },
+    //documentos o informacion adicional adjunta
+    attachments: {
+        type: String,
+    },
+    //fecha que se llevo a cabo la presentacion de la apelacion
+    submissionDate: {
         type: Date,
         default: Date.now,
-    }
+    },
 });
 
 const Appeal = mongoose.model("Appeal", appealSchema);

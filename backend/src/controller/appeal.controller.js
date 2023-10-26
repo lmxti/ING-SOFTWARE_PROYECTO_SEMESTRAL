@@ -70,3 +70,11 @@ async function deleteAppealById(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
+module.exports = {
+    createAppeal,
+    getAppeals,
+    getAppealById,
+    updateAppealById,
+    deleteAppealById,
+};
