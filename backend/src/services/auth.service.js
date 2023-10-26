@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 
 /** Modelo de datos 'Person' */
 const Person = require("../models/person.model.js");

@@ -16,7 +16,10 @@ router.use(authenticationMiddleware);
 
 // Define las rutas para las becas
 router.get("/",  grantController.getGrants);
+router.get("/:id", grantController.getGrantById);
 router.post("/", authorizationMiddleware.isAdmin, grantController.createGrant);
+router.put("/:id", authorizationMiddleware.isAdmin, grantController.updateGrantById);
+router.delete("/:id", authorizationMiddleware.isAdmin, grantController.deleteGrantById);
 
 
 module.exports = router;

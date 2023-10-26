@@ -1,27 +1,32 @@
 "use strict";
-
+// <-----------------------------SERVICIO DE AUTENTICACION------------------------------->
+/*Servicio de autenticacion de usuarios */
+const AuthServices = require("../services/auth.service");
+/*Esquema de validacion de datos para el inicio de sesion */
+const { authLoginBodySchema } = require("../schema/auth.schema");
+// <-------------------------------------UTILIDADES-------------------------------------->
+/* Funciones que manejan las respuestas HTTP (Envian respuesta de exito o error) */
 const { respondSuccess, respondError } = require("../utils/resHandler");
+/* Funcion que registra y maneja errores de manera centralizada */
 const { handleError } = require("../utils/errorHandler");
 
-/** Servicios de autenticación */
-const AuthServices = require("../services/auth.service");
-const { authLoginBodySchema } = require("../schema/auth.schema");
-
-/**
- * Inicia sesión con un usuario.
+/** ---------------------------------------------------------------------------------------
  * @async
  * @function login
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
+ * @description Inicia sesion de usuario y devuelve un token de acceso (admin o user)
+ * @param {Object} req - Objeto de petición HTTP (body: {email, password})
+ * @param {Object} res - Objeto de respuesta HTTP (token: {accessToken})
  */
 async function login(req, res) {
   try {
     const { body } = req;
+
+    // Validacion de datos de entrada
     const { error: bodyError } = authLoginBodySchema.validate(body);
     if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-    const [accessToken, refreshToken, errorToken] =
-      await AuthServices.login(body);
+
+    const [accessToken, refreshToken, errorToken] = await AuthServices.login(body);
 
     if (errorToken) return respondError(req, res, 400, errorToken);
 
@@ -38,11 +43,11 @@ async function login(req, res) {
   }
 }
 
-/**
+/** ---------------------------------------------------------------------------------------
  * @name logout
- * @description Cierra la sesión del usuario
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
+ * @description Cierra la sesión del usuario, quita el token
+ * @param {Object} req - Objeto de petición HTTP (cookies: {jwt})
+ * @param {Object} res - Objeto de respuesta HTTP 
  * @returns
  */
 async function logout(req, res) {
@@ -57,7 +62,7 @@ async function logout(req, res) {
   }
 }
 
-/**
+/** ---------------------------------------------------------------------------------------
  * @name refresh
  * @description Refresca el token de acceso
  * @param {Object} req - Objeto de petición
