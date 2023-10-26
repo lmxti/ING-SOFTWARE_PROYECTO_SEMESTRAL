@@ -2,14 +2,21 @@ const mongoose = require('mongoose');
 
 const revisionSchema = new mongoose.Schema({
     /*
-    solicitud: {
+    persona: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Solicitud',
+        ref: 'person',
+        required: true
+    }
+    */
+    /*
+    documentos: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'beca',
         required: true
     }
     */
 });
 
-const Revision = mongoose.model('Revision', revisionSchema);
-
-module.exports = Revision;
+module.exports = {
+    revisionSchema,
+};
