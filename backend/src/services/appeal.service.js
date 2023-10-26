@@ -61,3 +61,10 @@ async function updateAppeal(id, appeal){
         handleError(error, "appeal.service -> updateAppeal");
     }
 }
+
+module.exports = {
+    createAppeal,
+    getAppeals,
+    getAppealById,
+    updateAppeal,
+};

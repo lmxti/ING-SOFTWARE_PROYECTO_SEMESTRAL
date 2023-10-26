@@ -6,8 +6,10 @@ const appealController = require('../controllers/appeal.controller.js');
 
 router.use(authenticationMiddleware);
 //define ruta para apelaciones
-router.post("/",authorizationMiddleware.isAdmin);
-router.put("/:id",authorizationMiddleware.isAdmin);
-router.delete("/:id",authorizationMiddleware.isAdmin);
+router.get("/", appealController.getAppeals);
+router.get("/:id", appealController.getAppealById);
+router.post("/",authorizationMiddleware.isAdmin, appealController.createAppeal);
+router.put("/:id",authorizationMiddleware.isAdmin, appealController.updateAppealById);
+router.delete("/:id",authorizationMiddleware.isAdmin, appealController.deleteAppealById);
 
 module.exports = router;
