@@ -1,14 +1,18 @@
-const Appeal = require("../models/appeal.model.js");
+const { respondSucces, respondError } = require("../utils/errors");
+const AppealService = require("../services/appeal.service");
+const { handleError } = require("../utils/errorHandler");
+
 
 
 //controlador para crear una nueva apelacion
 async function createAppeal(req, res) {
     try {
-        const { reason } = req.body;
-        
+        const { user, reason, attachments } = req.body;
 
         const appeal = new Appeal({
+            user,
             reason,
+            attachments,
         });
         await appeal.save();
         res.status(201).json(appeal);
@@ -26,7 +30,8 @@ async function getAppeals(req, res) {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+}   
+
 
 //controlador para obtener una apelacion por id
 async function getAppealById(req, res) {
