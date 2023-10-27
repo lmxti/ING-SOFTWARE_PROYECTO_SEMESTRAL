@@ -5,6 +5,7 @@ const RevisionService = require("../services/revision.service.js");
 const { revisionBodySchema, revisionIdSchema } = require("../schema/revision.schema.js");
 const { handleError } = require("../utils/errorHandler.js");
 const { userSchema } = require("../schema/user.schema.js");
+const { Beca } = require("../models/beca.model.js");
 
 async function createRevision(req, res) {
   try {
@@ -38,7 +39,7 @@ async function getRevision(req, res) {
     }
 
     const [revision, revisionError] = await RevisionService.getRevision(params.id);
-    // Verificacion de errores
+
     if (revisionError) {
       return respondError(req, res, 404, revisionError);
     }
@@ -103,10 +104,37 @@ function compararDatos(usuarioActual, datosPostulante) {
   }
 }
 
+
+async function comprobarDocumentos(req, res) {
+  try {
+    const { body } = req;
+
+    const documentosRequeridos = ["documento1.pdf", "documento2.pdf", "documento3.pdf"];
+
+    const documentosSubidos = body.documentos;
+
+    if (documentosSubidos.length !== documentosRequeridos.length) {
+      return respondError(req, res, 400, "Se requieren " + documentosRequeridos.length + " documentos.");
+    }
+
+    const faltanDocumentos = documentosRequeridos.filter(documento => !documentosSubidos.includes(documento));
+
+    if (faltanDocumentos.length > 0) {
+      return respondError(req, res, 400, "Faltan los siguientes documentos: " + faltanDocumentos.join(", "));
+    }
+
+    respondSuccess(req, res, 200, "Documentos verificados");
+  } catch (error) {
+    handleError(error, "comprobarDocumentos");
+    respondError(req, res, 500, "Error al verificar documentos.");
+  }
+}
+
 module.exports = {
     createRevision,
     getRevision,
     deleteRevision,
     compararDatosEnviados,
+    comprobarDocumentos,
   };
   
