@@ -1,7 +1,7 @@
 "use strict"
 
 const Joi = require("joi");
-const ROLES = require("../constants/roles.constants");
+const ROLES = require("../constants/roles.constants.js");
 
 /**
  * Esquema de validacion para el cuerpo de la solicitud de usuario
@@ -14,7 +14,7 @@ const personBodySchema = Joi.object({
         "any.required": "El nombre es un campo requerido",
         "string.base": "El nombre debe ser de tipo texto"
     }),
-    surname: Joi.string().required().messages({
+    lastname: Joi.string().required().messages({
         "string.empty": "El apellido no puede estar vacio",
         "any.required": "El apellido es un campo requerido",
         "string.base": "El apellido debe ser de tipo texto"

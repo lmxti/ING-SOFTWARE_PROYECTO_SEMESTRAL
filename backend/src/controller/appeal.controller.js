@@ -1,7 +1,7 @@
 const { respondSuccess, respondError } = require("../utils/resHandler.js");
 const AppealService = require("../services/appeal.service.js");
 const { handleError } = require("../utils/errorHandler.js");
-const { appealBodySchema } = require("../schema/appeal.schema.js");
+const { appealBodySchema } = require("../schemas/appeal.schema.js");
 
 
 //controlador para crear una nueva apelacion

@@ -25,7 +25,7 @@ const personSchema = new mongoose.Schema({
         enum: ['Masculino', 'Femenino', 'Otro'],
     },
     //fecha nacimiento
-    birthDate: {
+    birthdate: {
         type: Date,
         required: true,
     },
@@ -50,11 +50,11 @@ const personSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    //cuenta bancaria
-    bankAccount: {
-        type: String,
-        required: true,
-    },
+    // //cuenta bancaria
+    // bankAccount: {
+    //     type: String,
+    //     required: true,
+    // },
     //rol
     role: {
         type: mongoose.Schema.Types.ObjectId, ref: 'Role',

@@ -6,10 +6,10 @@ const express = require("express");
 const personController = require('../controller/person.controller.js');
 
 /** Middlewares de autorización */
-const authorizationMiddleware = require("../middlewares/authorization.middleware.js");
+const authorizationMiddleware = require("../middlewares/authori.middleware.js");
 
 /** Middleware de autenticación */
-const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
+const authenticationMiddleware = require("../middlewares/authent.middleware.js");
 
 const router = express.Router();
 

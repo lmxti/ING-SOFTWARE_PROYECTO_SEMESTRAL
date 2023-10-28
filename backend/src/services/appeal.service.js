@@ -1,4 +1,4 @@
-const Appeal = require("../models/appeal.model");
+const Appeal = require("../models/appeal.model.js");
 const { handleError, respondError } = require("../utils/utils.js");
 
 

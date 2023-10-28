@@ -2,7 +2,7 @@
 
 const Person = require("../models/person.model.js");
 const Role = require("../models/role.model.js");
-const { handleError } = require("../utils/errorHandler");
+const { handleError } = require("../utils/errorHandler.js");
 
 // <----------------------------------------------------------------->
 /**

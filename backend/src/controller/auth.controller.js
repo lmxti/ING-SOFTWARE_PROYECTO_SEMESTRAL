@@ -5,7 +5,7 @@ const { handleError } = require("../utils/errorHandler");
 
 /** Servicios de autenticación */
 const AuthServices = require("../services/auth.service");
-const { authLoginBodySchema } = require("../schema/auth.schema");
+const { authLoginBodySchema } = require("../schemas/auth.schema");
 
 /**
  * Inicia sesión con un usuario.

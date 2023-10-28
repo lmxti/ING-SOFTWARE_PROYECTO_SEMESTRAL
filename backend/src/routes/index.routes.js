@@ -7,7 +7,7 @@ const personRoutes = require("./person.routes.js");
 const authRoutes = require("./auth.routes.js");
 
 // Middleware de autenticacion
-const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
+const authenticationMiddleware = require("../middlewares/authent.middleware.js");
 
 /** Instancia del enrutador */
 const router = express.Router();

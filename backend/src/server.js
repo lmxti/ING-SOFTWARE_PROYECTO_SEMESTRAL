@@ -13,7 +13,7 @@ const indexRoutes = require("./routes/index.routes.js");
 // Importa el archivo 'db.config.js' para crear la conexión a la base de datos
 const { setupDB } = require("./config/db.config.js");
 // Importa el handler de errores
-const { handleFatalError, handleError} = require("./utils/errorHandler");
+const { handleFatalError, handleError} = require("./utils/errorHandler.js");
 const { createPersons, createRoles } = require("./config/initialSetup.js");
 
 

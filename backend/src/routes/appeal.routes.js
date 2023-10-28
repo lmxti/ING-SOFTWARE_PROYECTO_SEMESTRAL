@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authorizationMiddleware = require('../middlewares/authori.middleware.js');
 const authenticationMiddleware = require('../middlewares/authent.middleware.js');
-const appealController = require('../controllers/appeal.controller.js');
+const appealController = require('../controller/appeal.controller.js');
 
 router.use(authenticationMiddleware);
 //define ruta para apelaciones
