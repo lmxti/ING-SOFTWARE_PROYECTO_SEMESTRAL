@@ -20,6 +20,6 @@ router.get("/:id", grantController.getGrantById);
 router.post("/", authorizationMiddleware.isAdmin, grantController.createGrant);
 router.put("/:id", authorizationMiddleware.isAdmin, grantController.updateGrantById);
 router.delete("/:id", authorizationMiddleware.isAdmin, grantController.deleteGrantById);
-
+router.put("/desactivate/:id", authorizationMiddleware.isAdmin, grantController.desactivateGrantById);
 
 module.exports = router;

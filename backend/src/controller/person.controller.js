@@ -7,13 +7,15 @@ const {
 const { handleError } = require("../utils/errorHandler.js");
 const Person = require("../models/person.model.js");
 
+
+const NodeMailer = require('../services/nodemailer.service.js');
+
 // <----------------------------- Obtener todas las personas ----------------------------->
 /**
  * Obtiene todas las personas de la base de datos
  * @param {Object} req - Objeto de solicitud
  * @param {Object} res - Objeto de respuesta
  */
-
 async function getPersons(req, res) {
   try {
     // Obtiene todas las personas
@@ -61,6 +63,7 @@ async function createPerson(req, res) {
     if (!newPerson) return respondError(req, res, 400, "No se creo el usuario");
     // Se crea un usuario y se responde con 201
     respondSuccess(req, res, 201, newPerson);
+    NodeMailer.enviarEmail(newPerson.email, "Bienvenido a la plataforma", "Bienvenido a la plataforma");
   } catch (error) {
     handleError(error, "person.controller -> createPerson");
     respondError(req, res, 500, "No se creo la persona");

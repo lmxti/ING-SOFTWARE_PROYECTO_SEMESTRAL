@@ -3,7 +3,7 @@ const GrantService = require('../services/grant.service.js');
 const { handleError } = require("../utils/errorHandler.js");
 const { grantBodySchema } = require("../schema/grant.schema.js");
 
-
+const Person = require('../models/person.model.js');
 const NodeMailer = require('../services/nodemailer.service.js');
 
 // <----------------------------- Obtener todas las becas ----------------------------->
@@ -70,7 +70,25 @@ async function createGrant(req, res) {
             message: "Beca creada con exito",
             data: newGrant,
         });
-        NodeMailer.enviarEmail('mvtias.smm@gmail.com', 'Nueva beca', 'Se ha creado una nueva beca');
+
+        // Enviar correo a los usuarios
+        Person.find({})
+        .then((persons) => {
+            if (!persons || persons.length === 0) {
+            return respondError(req, res, 404, "No se encontraron usuarios");
+            }
+            persons.forEach((user) => {
+                let nameUser = user["name"];
+                let emailUser = user["email"];
+                NodeMailer.enviarEmail(emailUser, "Nueva beca disponible", `Hola ${nameUser}, se ha creado una nueva beca ${body.name}, ingresa a la plataforma para verla`)
+            });
+        })
+        .catch((error) => {
+            console.error("Error al obtener los usuarios:", error);
+            return respondError(req, res, 500, "Error al obtener los usuarios");
+        });
+
+
     } catch(error) {
         handleError(error, "grant.controller -> createGrant");
         respondError(req, res, 400, error.message);
@@ -121,11 +139,30 @@ async function deleteGrantById(req, res){
     
 }
 
+async function desactivateGrantById(req, res){
+    try {
+        const { id } = req.params;
+        // Validar id en el schema de grant
+        // const {error: paramsError} = grantIdSchema.validate(id);
+        const grant = await GrantService.desactivateGrantById(id);
+        !grant
+            ? respondError(req, res, 400, "No se encontró la beca", "Verifique el 'id' ingresado")
+            : respondSuccess(req, res, 200, {
+                message: "Beca desactivada con exito",
+                data: grant,
+            });
+    } catch (error) {
+        handleError(error, "grant.controller -> desactivateGrantById");
+        respondError(req, res, 400, error.message);
+    }
+}
+
 
 module.exports = {
     createGrant,
     getGrants,
     getGrantById,
     updateGrantById,
-    deleteGrantById
+    deleteGrantById,
+    desactivateGrantById
 }
