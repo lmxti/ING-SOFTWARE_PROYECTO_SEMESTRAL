@@ -3,6 +3,19 @@
 const Revision = require("../models/revision.model.js");
 const { handleError } = require("../utils/errorHandler.js");
 
+async function createRevision(datosRevision) {
+  try {
+    const nuevaRevision = new Revision(datosRevision);
+
+    const revisionCreada = await nuevaRevision.save();
+
+    return [revisionCreada, null];
+  } catch (error) {
+    handleError(error, "revision.service -> crearRevision");
+    return [null, "Error al crear la revisión"];
+  }
+}
+
 async function getRevision() {
     try {
       const revisiones = await Revision.find()
@@ -14,7 +27,7 @@ async function getRevision() {
     }
   }
 
-  async function deleteRevision(id) {
+async function deleteRevision(id) {
     try {
       return await Revision.findByIdAndDelete(id);
     } catch (error) {
@@ -22,7 +35,9 @@ async function getRevision() {
     }
   }
 
+
   module.exports = {
+    createRevision,
     getRevision,
     deleteRevision,
   };
