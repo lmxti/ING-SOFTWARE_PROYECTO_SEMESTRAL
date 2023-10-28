@@ -1,9 +1,9 @@
 "use strict";
 // Importa el modulo 'path' para obtener la ruta absoluta del archivo .env
-import { resolve } from "path";
+const path = require("path");
 
 /**  Obtiene la ruta absoluta del archivo .env. */
-const envFilePath = resolve(__dirname, ".env");
+const envFilePath = path.resolve(__dirname, ".env");
 
 // Carga las variables de entorno desde el archivo .env
 require("dotenv").config({ path: envFilePath });
@@ -19,4 +19,4 @@ const ACCESS_JWT_SECRET = process.env.ACCESS_JWT_SECRET;
 /** Secreto para el token de refresco */
 const REFRESH_JWT_SECRET = process.env.REFRESH_JWT_SECRET;
 
-export default { PORT, HOST, DB_URL, ACCESS_JWT_SECRET, REFRESH_JWT_SECRET };
+module.exports = { PORT, HOST, DB_URL, ACCESS_JWT_SECRET, REFRESH_JWT_SECRET };

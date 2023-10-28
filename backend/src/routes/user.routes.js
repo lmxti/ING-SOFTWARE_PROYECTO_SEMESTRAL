@@ -3,7 +3,7 @@
 const express = require("express");
 
 /** Controlador de usuarios */
-const usuarioController = require("../controllers/user.controller.js");
+const usuarioController = require("../controller/user.controller.js");
 
 /** Middlewares de autorización */
 const authorizationMiddleware = require("../middlewares/authorization.middleware.js");
