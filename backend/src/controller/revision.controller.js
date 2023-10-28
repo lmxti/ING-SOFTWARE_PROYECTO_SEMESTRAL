@@ -28,8 +28,6 @@ async function createRevision(req, res) {
   }
 }
 
-
-
 async function getRevision(req, res) {
   try {
     const { params } = req;
@@ -98,8 +96,7 @@ function compararDatos(usuarioActual, datosPostulante) {
   }
 
   if (usuarioActual.rut === datosPostulante.rut) {
-    datosRepetidos.push("rut");
-
+  datosRepetidos.push("rut");
   return datosRepetidos;
   }
 }
@@ -109,7 +106,7 @@ async function comprobarDocumentos(req, res) {
   try {
     const { body } = req;
 
-    const documentosRequeridos = ["documento1.pdf", "documento2.pdf", "documento3.pdf"];
+    const documentosRequeridos = ["documento1.pdf", "documento2.pdf", "documento3.pdf"];//Pueden agregarse más
 
     const documentosSubidos = body.documentos;
 
