@@ -1,10 +1,13 @@
 "use strict";
-
+//Se declaran las funciones de manejo de errores
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
+//Se declara el servicio que llevara a cabo cada proceso de Auth
 const AuthServices = require("../services/authService");
+//Se declara el esquema de Auth para la validacion de datos
 const { authLoginBodySchema } = require("../schema/authSchema");
 
+//Se declara la funcion para iniciar sesion
 async function login(req, res) {
   try {
     const { body } = req;
@@ -28,6 +31,7 @@ async function login(req, res) {
   }
 }
 
+//Se declara la funcion para cerrar sesion
 async function logout(req, res) {
   try {
     const cookies = req.cookies;
@@ -40,6 +44,7 @@ async function logout(req, res) {
   }
 }
 
+//Se declara la funcion para refrescar el token
 async function refresh(req, res) {
   try {
     const cookies = req.cookies;
@@ -56,6 +61,7 @@ async function refresh(req, res) {
   }
 }
 
+//Se exportan las funciones
 module.exports = {
   login,
   logout,

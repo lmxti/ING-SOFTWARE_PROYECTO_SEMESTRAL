@@ -1,11 +1,15 @@
+//Se declaran las funciones de manejo de errores 
 const { respondSuccess, respondError } = require("../utils/resHandler.js");
+const { handleError } = require("../utils/errorHandler.js");
+//Se declara el servicio que llevara a cabo cada proceso de Person
 const PersonService = require("../services/personService.js");
+//Se declara el esquema de Person para la validacion de datos
 const {
   personBodySchema,
   personIdSchema,
 } = require("../schema/personSchema.js");
-const { handleError } = require("../utils/errorHandler.js");
 
+//Se declara la funcion para obtener todas las personas
 async function getPersons(req, res) {
   try {
     const [persons, errorPersons] = await PersonService.getPersons();
@@ -21,6 +25,7 @@ async function getPersons(req, res) {
   }
 }
 
+//Se declara la funcion para crear una persona
 async function createPerson(req, res) {
   try {
     const { body } = req;
@@ -41,6 +46,7 @@ async function createPerson(req, res) {
   }
 }
 
+//Se declara la funcion para obtener una persona por su id
 async function getPersonById(req, res) {
   try {
     const { params } = req;
@@ -62,6 +68,7 @@ async function getPersonById(req, res) {
   }
 }
 
+//Se declara la funcion para actualizar una persona por su id
 async function updatePersonById(req, res) {
   try {
     const { params, body } = req;
@@ -85,13 +92,14 @@ async function updatePersonById(req, res) {
   }
 }
 
+//Se declara la funcion para eliminar una persona por su id
 async function deletePerson(req, res) {
   const { params } = req;
   const { error: paramsError } = personIdSchema.validate(params);
   if (paramsError) {
     return respondError(req, res, 400, paramsError.message);
   }
-  const person = await PersonService.deletePerson(params.id);
+  const person = await PersonService.deletePersonById(params.id);
   if (!person) {
     respondError(
       req,
@@ -104,6 +112,7 @@ async function deletePerson(req, res) {
   }
 }
 
+//Se exportan las funciones
 module.exports = {
   getPersons,
   createPerson,

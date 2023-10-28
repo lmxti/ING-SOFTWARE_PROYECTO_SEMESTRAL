@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const becaSchema = new mongoose.Schema(
+const grantSchema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -18,13 +18,9 @@ const becaSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        state: {
-            type: String,
-            required: true,
-        },
     }
 )
 
-const Beca = mongoose.model("Beca", becaSchema);
+const Grant = mongoose.model("Grant", grantSchema);
 
-module.exports = Beca;
+module.exports = Grant;

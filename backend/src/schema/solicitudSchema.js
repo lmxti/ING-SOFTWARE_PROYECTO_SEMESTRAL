@@ -8,10 +8,15 @@ const solicitudBodySchema = Joi.object({
         "any.required": "La persona es un campo requerido",
         "string.base": "La persona debe ser de tipo texto",
     }),
-    beca: Joi.string().required().messages({
+    grant: Joi.string().required().messages({
         "string.empty": "La beca no puede estar vacia",
         "any.required": "La beca es un campo requerido",
         "string.base": "La beca debe ser de tipo texto",
+    }),
+    state: Joi.string().required().messages({
+        "string.empty": "El estado no puede estar vacio",
+        "any.required": "El estado es un campo requerido",
+        "string.base": "El estado debe ser de tipo texto",
     }),
     });
 

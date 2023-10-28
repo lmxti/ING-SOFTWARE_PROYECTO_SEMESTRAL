@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const STATES = require('../constants/states.js');
 
 const solicitudSchema = new mongoose.Schema({
     person: {
@@ -6,15 +7,20 @@ const solicitudSchema = new mongoose.Schema({
         ref: 'Person',
         required: true
     },
-    beca: {
+    grant: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Beca',
+        ref: 'Grant',
         required: true
     },
-    fecha: {
-        type: Date,
-        default: Date.now
+    state: {
+        type: String,
+        required: true,
+        enum: STATES,
+        default: STATES[2]
     }
+},
+{
+    versionKey: false,
 });
 
 const Solicitud = mongoose.model('Solicitud', solicitudSchema);
