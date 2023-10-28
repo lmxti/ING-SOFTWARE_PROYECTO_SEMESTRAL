@@ -15,6 +15,13 @@ let transporter = nodemailer.createTransport({
         }
 });
 
+/**
+ * @name enviarEmail
+ * @description Funcion para enviar correos a traves de nodemailer a un destinatario con un asunto y un texto
+ * @param {String} to - Correo del destinatario
+ * @param {String} subject - Asunto del correo
+ * @param {String} text - Texto del correo
+ */
 async function enviarEmail(to, subject, text) {
     try {
         const mailOptions = {

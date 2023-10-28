@@ -5,8 +5,6 @@ const {
   personIdSchema,
 } = require("../schema/person.schema.js");
 const { handleError } = require("../utils/errorHandler.js");
-const Person = require("../models/person.model.js");
-
 
 const NodeMailer = require('../services/nodemailer.service.js');
 
@@ -15,6 +13,7 @@ const NodeMailer = require('../services/nodemailer.service.js');
  * Obtiene todas las personas de la base de datos
  * @param {Object} req - Objeto de solicitud
  * @param {Object} res - Objeto de respuesta
+ * @returns {Object} - Objeto de respuesta con todas las personas de la base de datos
  */
 async function getPersons(req, res) {
   try {
@@ -42,13 +41,11 @@ async function getPersons(req, res) {
 }
 
 // <----------------------------- Crear una persona ----------------------------->
-
 /**
  * Crea una nueva persona en la base de datos
  *@param {Object} req - Objeto de solicitud
  *@param {Object} res - Objeto de respuesta
  */
-
 async function createPerson(req, res) {
   try {
     const { body } = req;

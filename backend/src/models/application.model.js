@@ -12,6 +12,10 @@ const applicationSchema = new mongoose.Schema({
         ref: 'Beca',
         required: true,
     },
+    documents: {
+        type: [String],
+        required: true,
+    },
     status: {
         type: String,
         enum: STATES,

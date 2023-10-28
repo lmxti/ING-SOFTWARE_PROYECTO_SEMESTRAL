@@ -106,7 +106,7 @@ async function checkGrant() {
         const diasTranscurridos = diferenciaTiempo / (1000 * 3600 * 24); // Convertir a días
   
         if (diasTranscurridos >= 15) {
-          await desactivarBeca(beca._id); // Desactivar la beca
+          await desactivateGrantById(beca._id); // Desactivar la beca
         }
       });
     } catch (error) {

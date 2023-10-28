@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
+// <-------------------- MODELO PERSONA -------------------->
 const personSchema = new mongoose.Schema(
     {
         // Nombre de la persona

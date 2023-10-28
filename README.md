@@ -30,3 +30,18 @@
 1. Se creo modelo de beca 'Grant' y sus respectivos archivos (controlador, servicio, schema y rutas)
 2. Se creo el modelo de postulacion 'Application' (Faltan sus respectivos archivos: controlador, servicio, schema y rutas) y ademas se creo la constante 'status' que contiene los estados posibles para una postulacion.
 3. Instalacion para uso futuro de dependencias: nodemailer, multer
+
+
+### UPDATE 10.27
+1. Se incorporo la funcion que desactiva una beca a traves de un ID
+2. Se programo para que la funcion se ejecute cada medianoche si la diferencia entre la fecha de creacion de la beca y la fecha actual es de 15 o mas dias.
+
+
+### UPDATE 10.28
+1. Se incorporo codigo de "Felipe Burgos" que incluye los modelos,controladores,servicios y rutas sobre la revision de becas (reviewGrant)
+2. Falta ajustar el codigo para que se adapte a lo anteriormente programado.
+3. Se incorporo codigo de "Johan Rodriguez" que incluye los modelos,controladores,servicios y rutas sobre la revision de postulacion (appeal)
+4. Se ajusto y adapto el codigo para que el sistema de Apelaciones Y CRUD basico funcionaran
+
+
+
