@@ -9,19 +9,22 @@ const {
   solicitudIdSchema,
 } = require("../schema/solicitudSchema.js");
 
-//Obtener todas las solicitudes
-async function getSolicitudes(req, res) {
+//Crear una solicitud
+async function createSolicitud(req, res) {
   try {
-    const [solicitudes, solicitudesError] =
-      await SolicitudService.getSolicitudes();
-    if (solicitudesError) {
-      return respondError(req, res, 400, solicitudesError);
+    const { email } = req;
+    const solicitudData = req.body;
+    const [newSolicitud, solicitudError] =
+      await SolicitudService.createSolicitud(email, solicitudData);
+    if (solicitudError) {
+      return respondError(req, res, 400, solicitudError);
     }
-    solicitudes.length === 0
-      ? respondSuccess(req, res, 200, "No hay solicitudes registradas")
-      : respondSuccess(req, res, 200, solicitudes);
+    if (!newSolicitud) {
+      return respondError(req, res, 400, "No se pudo crear la solicitud");
+    }
+    respondSuccess(req, res, 200, newSolicitud);
   } catch (error) {
-    handleError(error, "solicitudController -> getSolicitudes");
+    handleError(error, "solicitudController -> createSolicitud");
     respondError(req, res, 400, error.message);
   }
 }
@@ -34,10 +37,8 @@ async function getSolicitud(req, res) {
     if (paramsError) {
       return respondError(req, res, 400, paramsError.message);
     }
-    const {id} = params;
-    const [solicitud, solicitudError] = await SolicitudService.getSolicitud(
-      id
-    );
+    const { id } = params;
+    const [solicitud, solicitudError] = await SolicitudService.getSolicitud(id);
     if (solicitudError) {
       return respondError(req, res, 400, solicitudError);
     }
@@ -51,25 +52,19 @@ async function getSolicitud(req, res) {
   }
 }
 
-//Crear una solicitud
-async function createSolicitud(req, res) {
+//Obtener todas las solicitudes
+async function getSolicitudes(req, res) {
   try {
-    const { body } = req;
-    const { error: bodyError } = solicitudBodySchema.validate(body);
-    if (bodyError) {
-      return respondError(req, res, 400, bodyError.message);
+    const [solicitudes, solicitudesError] =
+      await SolicitudService.getSolicitudes();
+    if (solicitudesError) {
+      return respondError(req, res, 400, solicitudesError);
     }
-    const [newSolicitud, solicitudError] =
-      await SolicitudService.createSolicitud(body);
-    if (solicitudError) {
-      return respondError(req, res, 400, solicitudError);
-    }
-    if (!newSolicitud) {
-      return respondError(req, res, 400, "No se pudo crear la solicitud");
-    }
-    respondSuccess(req, res, 201, newSolicitud);
+    solicitudes.length === 0
+      ? respondSuccess(req, res, 200, "No hay solicitudes registradas")
+      : respondSuccess(req, res, 200, solicitudes);
   } catch (error) {
-    handleError(error, "solicitudController -> createSolicitud");
+    handleError(error, "solicitudController -> getSolicitudes");
     respondError(req, res, 400, error.message);
   }
 }
@@ -100,7 +95,7 @@ async function deleteSolicitud(req, res) {
 
 //Actualizar solicitud
 async function updateSolicitud(req, res) {
-  try {
+  try{
     const { params, body } = req;
     const { error: paramsError } = solicitudIdSchema.validate(params);
     if (paramsError) {
@@ -121,7 +116,7 @@ async function updateSolicitud(req, res) {
       return respondError(req, res, 400, "No se pudo actualizar la solicitud");
     }
     respondSuccess(req, res, 200, solicitud);
-  } catch (error) {
+  }catch(error){
     handleError(error, "solicitudController -> updateSolicitud");
     respondError(req, res, 400, error.message);
   }
@@ -132,5 +127,5 @@ module.exports = {
   getSolicitudes,
   deleteSolicitud,
   updateSolicitud,
-  getSolicitud
+  getSolicitud,
 };

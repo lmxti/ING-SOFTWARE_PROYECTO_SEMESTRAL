@@ -6,113 +6,142 @@ const Grant = require("../models/grant.js");
 const Person = require("../models/person.js");
 const { respondSuccess } = require("../utils/resHandler.js");
 
-async function getSolicitudes() {
-    try {
-        const solicitudes = await Solicitud.find();
-        if (!solicitudes) {
-            return [null, "No hay solicitudes en la base de datos"];
-        }
-        return [solicitudes, null];
-    } catch (error) {
-        handleError(error, "solicitudService -> getSolicitudes");
+//Funcion para crear una solicitud de beca
+async function createSolicitud(email, solicitudData) {
+  try {
+    const person = await Person.findOne({ email });
+    if (!person) {
+      return [null, "No se encontro la persona autenticada"];
     }
+    if (person.name !== solicitudData.person.name) {
+      return [
+        null,
+        "El nombre de la persona no coincide con el de la persona autenticada",
+      ];
+    }
+    if (person.surname !== solicitudData.person.surname) {
+      return [
+        null,
+        "El apellido de la persona no coincide con el de la persona autenticada",
+      ];
+    }
+    if (person.rut !== solicitudData.person.rut) {
+      return [
+        null,
+        "El rut de la persona no coincide con el de la persona autenticada",
+      ];
+    }
+    if (person.gender !== solicitudData.person.gender) {
+      return [
+        null,
+        "El genero de la persona no coincide con el de la persona autenticada",
+      ];
+    }
+    if (person.address !== solicitudData.person.address) {
+      return [
+        null,
+        "La direccion de la persona no coincide con la de la persona autenticada",
+      ];
+    }
+    if (person.phone !== solicitudData.person.phone) {
+      return [
+        null,
+        "El telefono de la persona no coincide con el de la persona autenticada",
+      ];
+    }
+    if (person.email !== solicitudData.person.email) {
+      return [null, "El correo no coincide con el de la persona autenticada"];
+    }
+    const grant = await Grant.findOne({ name: solicitudData.grant });
+    if (!grant) {
+      return [null, "No se encontro la beca"];
+    }
+    const solicitudFound = await Solicitud.findOne({
+      "person.email": solicitudData.person.email,
+    });
+    if (solicitudFound) {
+      return [null, "Ya existe una solicitud de beca para esta persona"];
+    }
+    const newSolicitud = new Solicitud({
+      person: {
+        name: solicitudData.person.name,
+        surname: solicitudData.person.surname,
+        rut: solicitudData.person.rut,
+        gender: solicitudData.person.gender,
+        address: solicitudData.person.address,
+        phone: solicitudData.person.phone,
+        email: solicitudData.person.email,
+      },
+      grant: grant,
+      state: solicitudData.state,
+    });
+    await newSolicitud.save();
+    return [newSolicitud, null];
+  } catch (error) {
+    handleError(error, "solicitudService -> createSolicitud");
+  }
 }
 
+//Funcion para obtener una solicitud de beca especifica
 async function getSolicitud(solicitudId) {
-    try{
-        const solicitud = await Solicitud.findById(solicitudId);
-        if(!solicitud){
-            return [null, 'No existe la solicitud'];
-        }
-        const solicitante = await Person.findById(solicitud.person).select('-password -role -_id');
-        if(!solicitante){
-            return [null, 'No existe el solicitante'];
-        }
-        const beca = await Grant.findById(solicitud.grant).select('-_id');
-        if(!beca){
-            return [null, 'No existe la beca'];
-        }
-        const solicitudDetails = {
-            solicitud,
-            solicitante,
-            beca
-        }
-        return [solicitudDetails, null];
-    }catch(error){
-        handleError(error, 'solicitudService -> getSolicitud');
+  try {
+    const solicitud = await Solicitud.findById(solicitudId)
+      .populate("person", "-password -role -_id", Grant)
+      .populate("grant", "name -_id");
+    if (!solicitud) {
+      return [null, "No existe la solicitud"];
     }
+    return [solicitud, null];
+  } catch (error) {
+    handleError(error, "solicitudService -> getSolicitud");
+  }
 }
 
-async function createSolicitud(solicitud) {
-    try{
-        const {person, grant} = solicitud;
-        const personFound = await Person.findOne({name: person});
-        if(!personFound){
-            return [null, 'No existe la persona'];
-        }
-        const grantFound = await Grant.findOne({name: grant});
-        if(!grantFound){
-            return [null, 'No existe la beca'];
-        }
-        const solicitudFound = await Solicitud.findOne({person: personFound._id, grant: grantFound._id});
-        if(solicitudFound){
-            return [null, 'Ya existe una solicitud con esos datos'];
-        }
-        const newSolicitud = new Solicitud({
-            person: personFound,
-            grant: grantFound
-        });
-        await newSolicitud.save();
-        return [newSolicitud, null];
-    }catch(error){
-        handleError(error, 'solicitudService -> createSolicitud');
+//Funcion para obtener todas las solicitudes de beca
+async function getSolicitudes() {
+  try {
+    const solicitudes = await Solicitud.find()
+      .populate("person", "-password -role -_id", Grant)
+      .populate("grant", "name -_id");
+    if (solicitudes.length === 0) {
+      return [null, "No hay solicitudes en la base de datos"];
     }
+    return [solicitudes, null];
+  } catch (error) {
+    handleError(error, "solicitudService -> getSolicitudes");
+  }
 }
 
-async function deleteSolicitud(id){
-    try{
-        const solicitud = await Solicitud.findByIdAndDelete(id);
-        if(!solicitud){
-            return [null, 'No existe la solicitud'];
-        }
-        return [solicitud, null];
-    }catch(error){
-        handleError(error, 'solicitudService -> deleteSolicitud');
+async function deleteSolicitud(id) {
+  try {
+    const solicitud = await Solicitud.findByIdAndDelete(id);
+    if (!solicitud) {
+      return [null, "No existe la solicitud"];
     }
+    return [solicitud, null];
+  } catch (error) {
+    handleError(error, "solicitudService -> deleteSolicitud");
+  }
 }
 
-async function updateSolicitud(id, solicitud){
-    try{
-        const solicitudFound = await Solicitud.findById(id);
-        if(!solicitudFound){
-            return [null, 'No existe la solicitud'];
-        }
-        const {person, grant, state} = solicitud;
-        const personFound = await Person.findOne({name: person});
-        if(!personFound){
-            return [null, 'No existe la persona'];
-        }
-        const grantFound = await Grant.findOne({name: grant});
-        if(!grantFound){
-            return [null, 'No existe la beca'];
-        }
-        if(state === 'Pendiente'){
-            return [null, 'No se puede cambiar el estado a pendiente'];
-        }
-        solicitudFound.state = state;
-        solicitudFound.person = personFound._id;
-        solicitudFound.grant = grantFound._id;
-        await solicitudFound.save();
-        return [solicitudFound, null];
-    }catch(error){
-        handleError(error, 'solicitudService -> updateSolicitud');
+async function updateSolicitud(id, solicitud) {
+  try {
+    const solicitudUpdated = await Solicitud.findByIdAndUpdate(id, solicitud, {
+      new: true,
+    });
+    if (!solicitudUpdated) {
+      return [null, "No existe la solicitud"];
     }
+    return [solicitudUpdated, null];
+  } catch (error) {
+    handleError(error, "solicitudService -> updateSolicitud");
+  }
 }
 
 module.exports = {
-    getSolicitudes,
-    createSolicitud,
-    deleteSolicitud,
-    updateSolicitud,
-    getSolicitud
+  getSolicitudes,
+  createSolicitud,
+  deleteSolicitud,
+  updateSolicitud,
+  getSolicitud,
 };

@@ -50,6 +50,7 @@ async function createPersons() {
         role: [admin._id],
       }).save(),
     ]);
+    console.log("Personas creadas con exito");
   } catch (error) {
     console.error(error);
   }

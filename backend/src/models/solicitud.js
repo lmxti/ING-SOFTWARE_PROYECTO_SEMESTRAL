@@ -1,28 +1,39 @@
-const mongoose = require('mongoose');
-const STATES = require('../constants/states.js');
+const mongoose = require("mongoose");
+const STATES = require("../constants/states.js");
 
-const solicitudSchema = new mongoose.Schema({
+const solicitudSchema = new mongoose.Schema(
+  {
     person: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person',
-        required: true
+      type: {
+        name: String,
+        surname: String,
+        rut: String,
+        gender: String,
+        birthdate: String,
+        address: String,
+        phone: String,
+        email: String,
+        bankAccount: String,
+      },
     },
     grant: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Grant',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Grant",
+      required: true,
     },
     state: {
-        type: String,
-        required: true,
-        enum: STATES,
-        default: STATES[2]
-    }
-},
-{
+      type: String,
+      required: true,
+      enum: STATES,
+      default: STATES[2],
+    },
+  },
+  {
     versionKey: false,
-});
+    timestamps: true,
+  }
+);
 
-const Solicitud = mongoose.model('Solicitud', solicitudSchema);
+const Solicitud = mongoose.model("Solicitud", solicitudSchema);
 
 module.exports = Solicitud;
