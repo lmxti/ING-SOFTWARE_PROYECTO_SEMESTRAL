@@ -2,18 +2,15 @@
 
 const { respondSuccess, respondError } = require("../utils/resHandler.js");
 const reviewGrantService = require("../services/reviewGrant.service.js");
-const { revisionBodySchema, revisionIdSchema } = require("../schema/reviewGrant.schema.js");
+const { reviewBodySchema, reviewIdSchema } = require("../schema/reviewGrant.schema.js");
 const { handleError } = require("../utils/errorHandler.js");
 // const { userSchema } = require("../schema/person.schema.js");
 // const { Beca } = require("../models/grant.model.js");
 
-async function createRevision(req, res) {
+async function createReview(req, res) {
   try {
     const { body } = req;
-    // const { error: bodyError } = revisionBodySchema.validate(body);
-    // if (bodyError) {
-    //   return respondError(req, res, 400, bodyError.message);
-    // }
+
     const [newRevision, revisionError] = await reviewGrantService.createRevision(body);
     if (revisionError) {
       return respondError(req, res, 400, revisionError);
@@ -28,7 +25,7 @@ async function createRevision(req, res) {
   }
 }
 
-async function getRevisiones(req, res) {
+async function getReview(req, res) {
   try {
     // Obtiene todas las revisiones de postulaciones
     const [revision, revisionError] = await reviewGrantService.getRevision();
@@ -43,7 +40,7 @@ async function getRevisiones(req, res) {
   }
 }
 
-async function deleteRevision(req, res) {
+async function deleteReview(req, res) {
     try {
       const { params } = req;
       const { error: paramsError } = revisionIdSchema.validate(params);
@@ -104,9 +101,9 @@ async function comprobarDocumentos(req, res) {
 }
 
 module.exports = {
-    createRevision,
-    getRevisiones,
-    deleteRevision,
+    createReview,
+    getReview,
+    deleteReview,
     compararUsuarios,
     comprobarDocumentos,
   };

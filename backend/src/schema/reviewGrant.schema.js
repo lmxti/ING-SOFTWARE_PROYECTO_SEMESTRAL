@@ -2,7 +2,7 @@
 
 const Joi = require("joi");
 
-const revisionBodySchema = Joi.object({
+const reviewBodySchema = Joi.object({
     person: Joi.string().required().messages({
         "string.empty": "El nombre no puede estar vacio",
         "any.required": "El nombre es un campo requerido",
@@ -22,7 +22,7 @@ const revisionBodySchema = Joi.object({
   "object.unknown": "No se permiten campos extra",
 });
 
-const revisionIdSchema = Joi.object({
+const reviewIdSchema = Joi.object({
     id: Joi.string().required().messages({
       "string.empty": "El id no puede estar vacio",
       "any.required": "El id es un campo requerido",
@@ -31,6 +31,6 @@ const revisionIdSchema = Joi.object({
 });
 
 module.exports = {
-    revisionBodySchema,
-    revisionIdSchema,
+    reviewBodySchema,
+    reviewIdSchema,
   };

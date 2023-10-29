@@ -7,9 +7,9 @@ const applicationSchema = new mongoose.Schema({
         ref: 'Person',
         required: true,
     },
-    beca: {
+    grant: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Beca',
+        ref: 'Grant',
         required: true,
     },
     documents: {

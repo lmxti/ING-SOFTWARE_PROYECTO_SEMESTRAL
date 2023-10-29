@@ -43,5 +43,9 @@
 3. Se incorporo codigo de "Johan Rodriguez" que incluye los modelos,controladores,servicios y rutas sobre la revision de postulacion (appeal)
 4. Se ajusto y adapto el codigo para que el sistema de Apelaciones Y CRUD basico funcionaran
 
+### UPDATE 10.29
+1. Se incorporo codigo de "Domingo Vega" que incluye los modelos,controladores,servicios y rutas sobre lapostulacion (application)
+2. Se realiza ajuste de codigo de application-rewiewGrant, ya que se necesita datos de la postulacion(application) para manejar en reviewGrant(Revision de beca /postulacion, error de alcance de nombre)
+
 
 

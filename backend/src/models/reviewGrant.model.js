@@ -25,4 +25,5 @@ const reviewGrantSchema = new mongoose.Schema({
 
 
 const ReviewGrant = mongoose.model("ReviewGrant", reviewGrantSchema);
+
 module.exports = ReviewGrant;

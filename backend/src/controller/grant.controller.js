@@ -71,7 +71,17 @@ async function createGrant(req, res) {
             data: newGrant,
         });
 
-        // Enviar correo a los usuarios
+        const [allGrants, errorGrants] = await GrantService.getGrants();
+        if (errorGrants) {
+            return respondError(
+                res,
+                500,
+                "Error al obtener las becas",
+                errorGrants
+            );
+        }
+
+        // Notificacion a todas las personas del sistema sobre la nueva beca creada + las becas existentes
         Person.find({})
         .then((persons) => {
             if (!persons || persons.length === 0) {
@@ -80,7 +90,12 @@ async function createGrant(req, res) {
             persons.forEach((user) => {
                 let nameUser = user["name"];
                 let emailUser = user["email"];
-                NodeMailer.enviarEmail(emailUser, "Nueva beca disponible", `Hola ${nameUser}, se ha creado una nueva beca ${body.name}, ingresa a la plataforma para verla`)
+                let message = `Hola ${nameUser}, se ha creado una nueva beca ${body.name}. Aquí están todas las becas disponibles:\n`;
+
+                allGrants.forEach((grant) => {
+                    message += `- ${grant.name} - Monto: ${grant.amount}\n`;
+                });
+                NodeMailer.enviarEmail(emailUser, "Nueva beca creada", message);
             });
         })
         .catch((error) => {

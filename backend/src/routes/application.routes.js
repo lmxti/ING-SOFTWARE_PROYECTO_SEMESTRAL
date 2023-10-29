@@ -11,6 +11,7 @@ const router = express.Router();
 router.use(authenticationMiddleware);
 
 router.post('/', applicationController.createApplication);
-
+router.get('/', authorizationMiddleware.isAdmin,applicationController.getApplications);
+router.put('/:id', applicationController.updateApplication);
 
 module.exports = router;
