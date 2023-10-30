@@ -134,10 +134,28 @@ async function desactivateGrantById(id) {
     try {
         const grantFound = await Grant.findById(id);
         if (!grantFound) return [null, "No se encontró la beca"];
-        const grantDesactivated = await Grant.findByIdAndUpdate(id, {state: false});
+        const grantDesactivated = await Grant.findByIdAndUpdate(id, {state: false}, { new: true });
         return [grantDesactivated, null];
     } catch (error) {
         handleError(error, "grant.service -> desactivateGrant");
+    }
+}
+// <-------------------------------------------------------------------->
+/**
+ * @name activateGrantById
+ * @description Servicio que se encarga de activar una beca
+ * @param {String} id - Id de la beca a activar 
+ * @returns 
+ */
+
+async function activateGrantById(id) {
+    try {
+        const grantFound = await Grant.findById(id);
+        if (!grantFound) return [null, "No se encontró la beca"];
+        const grantActivated = await Grant.findByIdAndUpdate(id, {state: true}, { new: true });
+        return [grantActivated, null];
+    } catch (error) {
+        handleError(error, "grant.service -> activateGrant");
     }
 }
 
@@ -179,5 +197,6 @@ module.exports = {
     getGrantById,
     updateGrant,
     deleteGrantById,
-    desactivateGrantById
+    desactivateGrantById,
+    activateGrantById
 }

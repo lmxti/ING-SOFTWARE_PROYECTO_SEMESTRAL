@@ -6,25 +6,6 @@ const { handleError } = require("../utils/errorHandler");
 
 // <----------------------------------------------------------------->
 /**
- * Obtiene todos las personas de la base de datos
- * @returns {Promise} Promesa con el objeto de las personas de la base de datos
- */
-async function getPersons() {
-  try {
-    const persons = await Person.find()
-      .select("-password")
-      .populate("role")
-      .exec();
-    if (!persons) {
-      return [null, "No hay personas en la base de datos"];
-    }
-    return [persons, null];
-  } catch (error) {
-    handleError(error, "user.service -> getPersons");
-  }
-}
-// <----------------------------------------------------------------->
-/**
  * Crea un nuevo usuario en la base de datos
  * @param {Object} user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de usuario creado
@@ -45,7 +26,7 @@ async function createPerson(user) {
     } = user;
 
     // Verificacion de existencia de persona en la base de datos
-    const personFound = await Person.findOne({ rut: rut});
+    const personFound = await Person.findOne({ rut: rut, email: email });
     if (personFound) return [null, "El usuario ya existe"];
     // Verificacion de rol de la persona en la base de datos
     const roleFound = await Role.find({ name: { $in: role}});
@@ -74,6 +55,28 @@ async function createPerson(user) {
     handleError(error, "person.service -> createPerson");
   }
 }
+
+
+// <----------------------------------------------------------------->
+/**
+ * Obtiene todos las personas de la base de datos
+ * @returns {Promise} Promesa con el objeto de las personas de la base de datos
+ */
+async function getPersons() {
+  try {
+    const persons = await Person.find()
+      .select("-password")
+      .populate("role")
+      .exec();
+    if (!persons) {
+      return [null, "No hay personas en la base de datos"];
+    }
+    return [persons, null];
+  } catch (error) {
+    handleError(error, "user.service -> getPersons");
+  }
+}
+
 // <----------------------------------------------------------------->
 /**
  * Obtiene una persona de la base de datos a traves del id
@@ -102,14 +105,12 @@ async function getPersonById(id) {
  * @param {Object} req user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de la persona de la base de datos
  */
-async function updatePersonById(id, req) {
+async function updatePersonById(id, body) {
   try {
-    // Verificacion de persona en la base de datos, por ID
-    const userFound = await Person.findById(id);
-    if (!userFound) {
+    const personFound = await Person.findById(id);
+    if (!personFound) {
       return [null, "No existe persona con ese id"];
     }
-    // Extraccion de datos del body (nuevos datos de la persona)
     const {
       name,
       surname,
@@ -120,19 +121,9 @@ async function updatePersonById(id, req) {
       phone,
       email,
       password,
-      bankAccount,
-    } = req.body;
+      role,
+    } = body;
 
-    // Verificacion de contrasena
-    const matchPassword = await Person.comparePassword(
-      password,
-      userFound.password
-    );
-    if (!matchPassword) {
-      return [null, "La contrasena no coincide"];
-    }
-
-    const myRole = userFound.map((role) => role._id);
 
     const personUpdated = await Person.findByIdAndUpdate(
       id,
@@ -145,15 +136,14 @@ async function updatePersonById(id, req) {
         address,
         phone,
         email,
-        password: await Person.encryptedPassword(newPassword || password),
-        bankAccount,
-        role: myRole,
+        password,
+        role
       },
-      { new: true }
+      { new: true },
     );
-    return [personUpdated, null];
+      return [personUpdated, null];
   } catch (error) {
-    handleError(error, "user.service -> updatePerson");
+    handleError(error, "user.service -> updatePersonById");
   }
 }
 // <----------------------------------------------------------------->
@@ -165,7 +155,12 @@ async function updatePersonById(id, req) {
 
 async function deletePersonById(id) {
     try{
-        return await Person.findByIdAndDelete(id);
+        const personFound = await Person.findById(id);
+        if (!personFound) {
+            return [null, "No existe persona con ese id"];
+        }
+        const personDeleted = await Person.findByIdAndDelete(id);
+        return [personDeleted, null];
     }catch(error){
         handleError(error, "user.service -> deletePerson");
     }

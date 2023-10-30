@@ -169,10 +169,6 @@ async function updateGrantById(req, res) {
         const { id } = req.params;
         // Desestructuracion de datos de la solicitud
         const { body } = req;
-        // Validacion de campos de datos de body
-        const { error: bodyError } = grantBodySchema.validate(body);
-        // Si existen errores en los campos de body
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
         // Servicio de actualizacion de beca
         const [grantUpdated, grantError] = await GrantService.updateGrant(id, body);
         // Si hay un error al actualizar la beca
@@ -233,7 +229,6 @@ async function desactivateGrantById(req, res){
         const { id } = req.params;
         // Servicio de desactivacion de beca
         const grant = await GrantService.desactivateGrantById(id);
-
         !grant
         // Si la beca no existe o no se encontro
             ? respondError(req, res, 400, "No se encontró la beca", "Verifique el 'id' ingresado")
@@ -248,6 +243,25 @@ async function desactivateGrantById(req, res){
     }
 }
 
+async function activateGrantById(req, res){
+    try {
+        // Desestructuracion de datos (id) de la solicitud
+        const { id } = req.params;
+        const grant = await GrantService.activateGrantById(id);
+        !grant
+        // Si la beca no existe o no se encontro
+            ? respondError(req, res, 400, "No se encontró la beca", "Verifique el 'id' ingresado")
+        // Si la beca existe y se desactivo con exito
+            : respondSuccess(req, res, 200, {
+                message: "Beca activada con exito",
+                data: grant,
+            });
+    } catch (error) {
+        handleError(error, "grant.controller -> activateGrantById");
+        respondError(req, res, 400, error.message);
+    }
+}
+
 
 module.exports = {
     createGrant,
@@ -255,5 +269,6 @@ module.exports = {
     getGrantById,
     updateGrantById,
     deleteGrantById,
-    desactivateGrantById
+    desactivateGrantById,
+    activateGrantById
 }

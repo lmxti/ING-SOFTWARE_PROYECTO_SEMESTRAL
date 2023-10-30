@@ -5,8 +5,33 @@ const {
   personIdSchema,
 } = require("../schema/person.schema.js");
 const { handleError } = require("../utils/errorHandler.js");
+const Person = require("../models/person.model.js");
 
-const NodeMailer = require('../services/nodemailer.service.js');
+// <----------------------------- Crear una persona ----------------------------->
+/**
+ * Crea una nueva persona en la base de datos
+ *@param {Object} req - Objeto de solicitud
+ *@param {Object} res - Objeto de respuesta
+ */
+ async function createPerson(req, res) {
+  try {
+    const { body } = req;
+    // Validacion de campos de body
+    const { error: bodyError } = personBodySchema.validate(body);
+    if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+    const [newPerson, personError] = await PersonService.createPerson(body);
+    // Error de createPerson
+    if (personError) return respondError(req, res, 400, personError);
+    // Error si no hay datos (false)
+    if (!newPerson) return respondError(req, res, 400, "No se creo el usuario");
+    // Se crea un usuario y se responde con 201
+    respondSuccess(req, res, 201, newPerson);
+  } catch (error) {
+    handleError(error, "person.controller -> createPerson");
+    respondError(req, res, 500, "No se creo la persona");
+  }
+}
 
 // <----------------------------- Obtener todas las personas ----------------------------->
 /**
@@ -37,33 +62,6 @@ async function getPersons(req, res) {
   } catch (error) {
     handleError(error, "person.controller -> getPersons");
     respondError(req, res, 400, error.message);
-  }
-}
-
-// <----------------------------- Crear una persona ----------------------------->
-/**
- * Crea una nueva persona en la base de datos
- *@param {Object} req - Objeto de solicitud
- *@param {Object} res - Objeto de respuesta
- */
-async function createPerson(req, res) {
-  try {
-    const { body } = req;
-    // Validacion de campos de body
-    const { error: bodyError } = personBodySchema.validate(body);
-    if (bodyError) return respondError(req, res, 400, bodyError.message);
-
-    const [newPerson, personError] = await PersonService.createPerson(body);
-    // Error de createPerson
-    if (personError) return respondError(req, res, 400, personError);
-    // Error si no hay datos (false)
-    if (!newPerson) return respondError(req, res, 400, "No se creo el usuario");
-    // Se crea un usuario y se responde con 201
-    respondSuccess(req, res, 201, newPerson);
-    NodeMailer.enviarEmail(newPerson.email, "Bienvenido a la plataforma", "Bienvenido a la plataforma");
-  } catch (error) {
-    handleError(error, "person.controller -> createPerson");
-    respondError(req, res, 500, "No se creo la persona");
   }
 }
 
@@ -104,21 +102,21 @@ async function getPersonById(req, res) {
 
 async function updatePersonById(req, res) {
   try {
-    const { params, body } = req;
-    const { error: paramsError } = personIdSchema.validate(params);
-    // Validacion de parametros
-    if (paramsError) {
-      return respondError(req, res, 400, paramsError.message);
-    }
-    const [person, personError] = await PersonService.updatePersonById(
-      params.id,
-      body
-    );
-    // Verificacion de errores
+    // Desestructuracion de datos (id) de la solicitud
+    const { id } = req.params;
+    // Desestructuracion de datos (body) de la solicitud
+    const { body } = req;
+    const [person, personError] = await PersonService.updatePersonById(id, body);
     if (personError) {
       return respondError(req, res, 400, personError);
     }
-    respondSuccess(req, res, 200, person);
+    if (!person) {
+      return respondError(req, res, 400, "No se actualizo la persona porque no se encontro");
+    }
+    respondSuccess(req, res, 200, {
+      message: "Persona actualizada con exito",
+      data: person,
+    });
   } catch (error) {
     handleError(error, "person.controller -> updatePersonById");
     respondError(req, res, 500, "No se actualizo la persona");
@@ -131,22 +129,22 @@ async function updatePersonById(req, res) {
  * @param {Object} res - Objeto de respuesta
  */
 
-async function deletePerson() {
-  const { params } = req;
-  const { error: paramsError } = personIdSchema.validate(params);
-  if (paramsError) {
-    return respondError(req, res, 400, paramsError.message);
-  }
-  const person = await PersonService.deletePerson(params.id);
-  if (!person) {
-    respondError(
-      req,
-      res,
-      400,
-      "No se elimino la persona, verifique el id ingresado"
-    );
-  } else {
-    respondSuccess(req, res, 200, person);
+async function deletePerson(req, res) {
+  try {
+    // Desestructuracion de datos (id) de la solicitud
+    const { id } = req.params;
+    const person = await PersonService.deletePersonById(id);
+    !person
+    // Si la persona no existe o no se encuentra
+      ? respondError(req, res, 400, `No se ha eliminado la persona: ${id}`)
+    // Si la persona existe y se elimina 
+      : respondSuccess(req, res, 200, {
+          message: "Persona eliminada con exito",
+          data: person,
+        });
+
+  } catch (error) {
+    handleError(error, "person.controller -> deletePerson");
   }
 }
 

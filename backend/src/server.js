@@ -24,7 +24,7 @@ async function setupServer(){
     // Middleware para el manejo de datos en formato JSON
     server.use(express.json());
     // Middleware cors
-    server.use(cors());
+    server.use(cors("*"));
     // Middleware para el manejo de cookies
     server.use(cookieParser());
     // Agregamos morgan para ver las peticiones que se hacen al servidor

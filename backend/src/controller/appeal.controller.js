@@ -69,7 +69,6 @@ async function getAppealById(req, res) {
         if (!appeal) {
             return respondError(req, res, 400, "No se encontro la apelacion");
         }
-        // NOTA: NO DEVUELVE LA APELACION POR ID DE LA BASE DE DATOS
         respondSuccess(req, res, 200, {
             message:"Apelacion obtenida con exito", 
             data: appeal

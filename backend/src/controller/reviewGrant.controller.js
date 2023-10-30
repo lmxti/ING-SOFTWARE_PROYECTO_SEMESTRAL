@@ -2,66 +2,75 @@
 
 const { respondSuccess, respondError } = require("../utils/resHandler.js");
 const reviewGrantService = require("../services/reviewGrant.service.js");
-const { reviewBodySchema, reviewIdSchema } = require("../schema/reviewGrant.schema.js");
+const { reviewBodySchema } = require("../schema/reviewGrant.schema.js");
 const { handleError } = require("../utils/errorHandler.js");
-// const { userSchema } = require("../schema/person.schema.js");
-// const { Beca } = require("../models/grant.model.js");
+const User = require("../models/person.model.js")
+
 
 async function createReview(req, res) {
   try {
-    const { body } = req;
-
-    const [newRevision, revisionError] = await reviewGrantService.createRevision(body);
-    if (revisionError) {
-      return respondError(req, res, 400, revisionError);
-    }
-    if (!newRevision) {
-      return respondError(req, res, 400, "No se creo la revivion");
-    }
-    respondSuccess(req, res, 201, newRevision);
+      const { body } = req;
+      const { error: bodyError } = reviewBodySchema.validate(body);
+      if (bodyError) {
+          return respondError(req, res, 400, bodyError.message);
+      }
+      const [newReview, reviewError] = await reviewGrantService.createRevision(body);
+      if (reviewError) {
+          return respondError(req, res, 400, reviewError);
+      }
+      if (!newReview) {
+          return respondError(req, res, 400, "No se creo la revision");
+      }
+      respondSuccess(req, res, 201, {
+          message: "Revision creada con exito",
+          data: newReview
+      });
   } catch (error) {
-    handleError(error, "reviewGrant.Controller -> createRevision");
-    respondError(req, res, 400, error.message);
+      handleError(error, "reviewGrant.controller -> createReview");
+      respondError(req, res, 400, error.message);
   }
 }
 
 async function getReview(req, res) {
   try {
-    // Obtiene todas las revisiones de postulaciones
-    const [revision, revisionError] = await reviewGrantService.getRevision();
-    
-    if (revisionError) {
-      return respondError(req, res, 404, revisionError);
-    }
-    respondSuccess(req, res, 200, revision);
+      const [review, errorReview] = await reviewGrantService.getRevision();
+      if (errorReview) {
+          return respondError(req, res, 400, "Error al obtener las revisiones", errorReview);
+      }
+      review.length === 0
+          ? respondSuccess(req, res, 200, "No hay revisiones registradas")
+          : respondSuccess(req, res, 200,{
+              message: "Revisiones obtenidas con exito",
+              data: review,
+      });
   } catch (error) {
-    handleError(error, "reviewGrant.controller -> getRevisiones");
-    respondError(req, res, 500, "No se pudo obtener la revision previa");
+      handleError(error, "reviewGrant.controller -> getReview");
+      respondError(req, res, 400, error.message);
   }
 }
 
 async function deleteReview(req, res) {
-    try {
-      const { params } = req;
-      const { error: paramsError } = revisionIdSchema.validate(params);
-      if (paramsError) return respondError(req, res, 400, paramsError.message);
-  
-      const revision = await reviewGrantService.deleteRevision(params.id);
-      !revision
-        ? respondError(req,res,404,"No se encontro la revision", "Verifique el id",)
-        : respondSuccess(req, res, 200, revision);
-    } catch (error) {
-      handleError(error, "reviewGrant.controller -> deleteRevision");
-      respondError(req, res, 500, "Revision no eliminada");
-    }
+  try {
+      const { id } = req.params;
+      const review = await reviewGrantService.deleteRevision(id);
+      !review
+          ? respondError(req, res, 400, `No se ha eliminado la revision`)
+          : respondSuccess(req, res, 200, {
+              message: "Revision eliminada con exito",
+              data: review
+          });
+  } catch (error) {
+      handleError(error, "reviewGrant.controller -> deleteReview");
+      respondError(req, res, 400, error.message);
   }
+}
 
 async function compararUsuarios(req, res) {
   try {
     const { body } = req; 
 
     const usuarioRegistrado = await User.findOne({
-      nombre: body.name,
+      name: body.name,
     });
 
     if (usuarioRegistrado){
@@ -75,7 +84,7 @@ async function compararUsuarios(req, res) {
   }
 }
 
-async function comprobarDocumentos(req, res) {
+/*async function comprobarDocumentos(req, res) {
   try {
     const { body } = req;
 
@@ -98,13 +107,13 @@ async function comprobarDocumentos(req, res) {
     handleError(error, "comprobarDocumentos");
     respondError(req, res, 500, "Error al verificar documentos.");
   }
-}
+}*/
 
 module.exports = {
     createReview,
     getReview,
     deleteReview,
     compararUsuarios,
-    comprobarDocumentos,
+    // comprobarDocumentos,
   };
   

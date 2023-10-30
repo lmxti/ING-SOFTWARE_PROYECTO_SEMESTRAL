@@ -18,22 +18,24 @@ async function createApplication(application) {
             return [null, 'La persona ya tiene una postulacion'];
         }
         // Busqueda de beca
-        const becaFound = await Grant.findById(grant);
+        const grantFound = await Grant.findById(grant).select('-state -__v');
         // Si no se encuentra la beca
-        if (!becaFound) {
+        if (!grantFound) {
             return [null, 'No se encontro la beca'];
         }
         // Destructuracion y creacion de nueva postulacion de beca
         const newApplication = new Application({
-            person,
-            grant,
+            person: personFound._id,
+            grant: grantFound._id,
             documents,
         });
         // Guardado de postulacion de beca
         const applicationCreated = await newApplication.save();
+
         const applicationPersonInfo ={
             ...applicationCreated._doc,
             person: personFound,
+            grant: grantFound
         }
         // Retorno de datos
         return [applicationPersonInfo, null];
@@ -75,8 +77,32 @@ async function updateApplication(application) {
     }
 }
 
+async function deleteApplication(application){
+    try{
+        // Eliminacion de postulacion
+        const applicationDeleted = await Application.findOneAndDelete(application);
+        // Retorno de datos
+        return [applicationDeleted, null];
+    }catch(error){
+        handleError(error, 'application.service -> deleteApplication');
+    }
+}
+
+async function getApplicationById(application){
+    try{
+        // Busqueda de postulacion
+        const applicationFound = await Application.findById(application).populate('person', '-password -_id -role').populate('grant', '-_id -state -__v');
+        // Retorno de datos
+        return [applicationFound, null];
+    }catch(error){
+        handleError(error, 'application.service -> getApplicationById');
+    }
+}
+
 module.exports = {
     createApplication,
     getApplications,
     updateApplication,
+    deleteApplication,
+    getApplicationById
 }

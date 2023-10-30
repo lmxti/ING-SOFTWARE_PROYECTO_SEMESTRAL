@@ -61,7 +61,6 @@ const personBodySchema = Joi.object({
     .required()
     .messages({
         "string.empty": "El rol no puede estar vacio",
-        "any.required": "El rol es un campo requerido",
         "string.base": "El rol debe ser de tipo texto",
         "any.only": "El rol debe ser valido"
     }),
