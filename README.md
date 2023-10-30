@@ -48,4 +48,9 @@
 2. Se realiza ajuste de codigo de application-rewiewGrant, ya que se necesita datos de la postulacion(application) para manejar en reviewGrant(Revision de beca /postulacion, error de alcance de nombre)
 
 
+### UPDATE 10.30
+1. Se junto todo y probaron las rutas de beca, postulacion, revision de beca y revision de postulacion (CRUD basico)
+2. Se dejo en constancia los cambios futuros que se deben realizar en el codigo para que el sistema funcione correctamente
+
+
 
