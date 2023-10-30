@@ -9,6 +9,7 @@ const grantRoutes = require("./grant.routes.js");
 const appealRoutes = require("./appeal.routes.js");
 const reviewRoutes = require("./reviewGrant.routes.js");
 const applicationRoutes = require("./application.routes.js");
+const pdfRoutes = require("./pdf.routes.js");
 
 // Middleware de autenticacion
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
@@ -25,6 +26,7 @@ router.use("/grants", authenticationMiddleware, grantRoutes);
 
 // RUTAS DE DOMINGO
 router.use("/applications", authenticationMiddleware, applicationRoutes);
+router.use("/pdf", authenticationMiddleware, pdfRoutes);
 
 // RUTAS DE JOHAN
 router.use("/appeals", authenticationMiddleware, appealRoutes);
