@@ -2,6 +2,8 @@
  
 const Person = require("../models/person.model.js");
 const Role = require("../models/role.model.js");
+const Requirement = require("../models/requirement.model.js");
+const ListRequirement = require("../constants/requirements.constants.js")
 
 /**
  * Crea los roles por defecto en la base de datos.
@@ -58,8 +60,41 @@ async function createPersons(){
     }
 };
 
+async function createRequirements() {
+    try {
+        // Requerimientos en la base de datos
+        const requirementsInBD = await Requirement.find({}).select("name");
+
+        // Requerimientos que no están en la base de datos
+        const newRequirements = ListRequirement.filter( requirement => !requirementsInBD.map(req => req.name).includes(requirement));
+
+        // Requerimientos presentes en la base de datos que no están en la lista constante
+        const obsoleteRequirements = requirementsInBD.filter(req => !ListRequirement.includes(req.name));
+
+        // Agregar nuevos requerimientos
+        await Promise.all(
+            newRequirements.map(async requirement => {
+                await new Requirement({ name: requirement }).save();
+            })
+        );
+        // Eliminar requerimientos obsoletos
+        await Requirement.deleteMany({ name: { $in: obsoleteRequirements.map(req => req.name) } });
+
+        console.log(`Se han creado ${newRequirements.length} requerimientos nuevos.`);
+        console.log(`Se han eliminado ${obsoleteRequirements.length} requerimientos obsoletos.`);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+
+
+
+
 module.exports = {
     createRoles,
     createPersons,
+    createRequirements
   };
   

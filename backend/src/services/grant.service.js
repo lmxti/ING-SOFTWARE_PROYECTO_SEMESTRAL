@@ -1,4 +1,5 @@
 const Grant = require('../models/grant.model');
+const Requirement = require('../models/requirement.model');
 const { handleError } = require("../utils/errorHandler");
 const cron = require('node-cron');
 
@@ -58,12 +59,17 @@ async function createGrant(grant){
         // Retorno de error si la beca ya existe
         if (grantFound) return [null, `No se pudo crear la beca, ya existe una con el nombre '${name}'`];
 
+        // Verificar y encontrar los requisitos según los IDs proporcionados
+        const existingRequirements = await Requirement.find({ _id: { $in: requirements } });
+        if (existingRequirements.length !== requirements.length) {
+            return [null, 'No se encontraron todos los requisitos'];
+        }
 
         const newGrant = new Grant({
             name,
             documents,
             amount,
-            requirements
+            requirements: existingRequirements
         })
         await newGrant.save();
         return [newGrant, null];
