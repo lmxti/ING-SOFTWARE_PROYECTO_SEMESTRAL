@@ -1,14 +1,25 @@
 const PDF = require("../models/pdf.model.js");
 const { handleError } = require("../utils/errorHandler");
+const Person = require("../models/person.model.js");
 
-async function createPDF(name, filePath) {
+async function createPDF(file, id) {
     try {
-      const newPDF = new PDF({
-        name,
-        filePath,
+      Person.findById(id, (err, Person) => {
+        if (err) {
+          return handleError(err);
+        }
+        if(!Person){
+          return handleError(err);
+        }
       });
-      await newPDF.save();
-      return [newPDF, null];
+      let aux = PDF.map((PDF)=>{
+        const newPDF = new PDF({
+          file,
+          id,
+        });
+        newPDF.save();
+        return [newPDF, null];
+      })
     } catch (error) {
       const errorMessage = 'No se pudo crear el PDF.';
       handleError(error, 'pdfService -> createPDF', errorMessage);

@@ -3,45 +3,79 @@ const { handleError } = require('../utils/errorHandler.js');
 const Person = require('../models/person.model.js');
 const Grant = require('../models/grant.model.js');
 
-async function createApplication(application) {
+async function createApplication(email, solicitudData) {
     try {
-        const { person, grant, documents } = application;
-        // Busqueda de persona
-        const personFound = await Person.findById(person).select('-password -role');
-        // Si no se encuentra la persona
-        if (!personFound) {
-            return [null, 'No se encontro la persona'];
+        const person = await Person.findOne({ email });
+        if (!person) {
+          return [null, "No se encontro la persona autenticada"];
         }
-        // Si la persona ya tiene una postulacion
-        const applicationFound = await Application.findOne({ person: personFound._id });
-        if (applicationFound) {
-            return [null, 'La persona ya tiene una postulacion'];
+        if (person.name !== solicitudData.person.name) {
+          return [
+            null,
+            "El nombre de la persona no coincide con el de la persona autenticada",
+          ];
         }
-        // Busqueda de beca
-        const grantFound = await Grant.findById(grant).select('-state -__v');
-        // Si no se encuentra la beca
-        if (!grantFound) {
-            return [null, 'No se encontro la beca'];
+        if (person.surname !== solicitudData.person.surname) {
+          return [
+            null,
+            "El apellido de la persona no coincide con el de la persona autenticada",
+          ];
         }
-        // Destructuracion y creacion de nueva postulacion de beca
-        const newApplication = new Application({
-            person: personFound._id,
-            grant: grantFound._id,
-            documents,
+        if (person.rut !== solicitudData.person.rut) {
+          return [
+            null,
+            "El rut de la persona no coincide con el de la persona autenticada",
+          ];
+        }
+        if (person.gender !== solicitudData.person.gender) {
+          return [
+            null,
+            "El genero de la persona no coincide con el de la persona autenticada",
+          ];
+        }
+        if (person.address !== solicitudData.person.address) {
+          return [
+            null,
+            "La direccion de la persona no coincide con la de la persona autenticada",
+          ];
+        }
+        if (person.phone !== solicitudData.person.phone) {
+          return [
+            null,
+            "El telefono de la persona no coincide con el de la persona autenticada",
+          ];
+        }
+        if (person.email !== solicitudData.person.email) {
+          return [null, "El correo no coincide con el de la persona autenticada"];
+        }
+        const grant = await Grant.findOne({ name: solicitudData.grant });
+        if (!grant) {
+          return [null, "No se encontro la beca"];
+        }
+        const solicitudFound = await Application.findOne({
+          "person.email": solicitudData.person.email,
         });
-        // Guardado de postulacion de beca
-        const applicationCreated = await newApplication.save();
-
-        const applicationPersonInfo ={
-            ...applicationCreated._doc,
-            person: personFound,
-            grant: grantFound
+        if (solicitudFound) {
+          return [null, "Ya existe una solicitud de beca para esta persona"];
         }
-        // Retorno de datos
-        return [applicationPersonInfo, null];
-    } catch (error) {
-        handleError(error, 'application.service -> createApplication');
-    }
+        const newApplication = new Application({
+          person: {
+            name: solicitudData.person.name,
+            surname: solicitudData.person.surname,
+            rut: solicitudData.person.rut,
+            gender: solicitudData.person.gender,
+            address: solicitudData.person.address,
+            phone: solicitudData.person.phone,
+            email: solicitudData.person.email,
+          },
+          grant: grant,
+          state: solicitudData.state,
+        });
+        await newApplication.save();
+        return [newApplication, null];
+      } catch (error) {
+        handleError(error, "solicitudService -> createSolicitud");
+      }
 }
 
 async function getApplications() {

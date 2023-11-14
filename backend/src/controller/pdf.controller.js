@@ -4,8 +4,9 @@ const PDFService = require('../services/pdf.service.js');
 
 async function createPDF(req, res) {
     try {
-      const { originalname, path } = req.file;
-      const [pdf, error] = await PDFService.createPDF(originalname, path);
+      const { file } = req;
+      const { id } = req.params;
+      const [pdf, error] = await PDFService.createPDF(file, id);
       if (error) {
         return respondError(req, res, 400, error);
       }

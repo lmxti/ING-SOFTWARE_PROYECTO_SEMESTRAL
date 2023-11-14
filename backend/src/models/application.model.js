@@ -3,17 +3,21 @@ const STATES = require('../constants/states.constants.js');
 
 const applicationSchema = new mongoose.Schema({
     person: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Person',
-        required: true,
-    },
+        type: {
+          name: String,
+          surname: String,
+          rut: String,
+          gender: String,
+          birthdate: String,
+          address: String,
+          phone: String,
+          email: String,
+          bankAccount: String,
+        },
+      },
     grant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Grant',
-        required: true,
-    },
-    documents: {
-        type: [String],
         required: true,
     },
     status: {
