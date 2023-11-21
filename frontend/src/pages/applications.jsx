@@ -29,8 +29,9 @@ const Applications = () => {
         ...prevData.person,
         [name]: value,
       },
-      grant: value,
+      grant: name === "grant" ? value : prevData.grant,
     }));
+    
   };
 
   const handleSubmit = async (event) => {
@@ -43,7 +44,7 @@ const Applications = () => {
     try {
       const token = cookies.get("jwt-auth");
       const response = await axios.post(
-        "http://localhost:3000/api/applications/",
+        "http://localhost:3001/api/applications/",
         formData,
         {
           headers: {
