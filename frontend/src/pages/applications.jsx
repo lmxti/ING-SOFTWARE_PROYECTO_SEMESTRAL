@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import cookies from "js-cookie";
+import { useRouter } from "next/router";
+import ApplicationsForm from "../components/ApplicationsForm";
+
+const Applications = () => {
+    const router = useRouter();
 
 
-function SolicitudForm() {
   const [formData, setFormData] = useState({
     person: {
       name: "",
@@ -11,33 +16,20 @@ function SolicitudForm() {
       gender: "",
       address: "",
       phone: "",
-      email: ""
+      email: "",
     },
     grant: "",
   });
 
-  console.log(formData);
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData((prevData) =>({
+    setFormData((prevData) => ({
       ...prevData,
       person: {
         ...prevData.person,
         [name]: value,
       },
       grant: value,
-    }));
-  };
-
-  const handleGenderChange = (event) => {
-    const { value } = event.target;
-    setFormData((prevData) =>({
-      ...prevData,
-      person: {
-        ...prevData.person,
-        gender: value,
-      }
     }));
   };
 
@@ -48,18 +40,24 @@ function SolicitudForm() {
     Object.entries(formData).forEach(([key, value]) => {
       data.append(key, value);
     });
-
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post("http://localhost:3001/api/applications/", formData, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      console.log(response.data);
+      const token = cookies.get("jwt-auth");
+      const response = await axios.post(
+        "http://localhost:3000/api/applications/",
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
       // Puedes redirigir al usuario o realizar otras acciones después de enviar la solicitud
     } catch (error) {
-      console.error("Error en la solicitud de postulación:", error.response.data);
+      console.error(
+        "Error en la solicitud de postulación:",
+        error.response.data
+      );
       // Puedes mostrar un mensaje de error al usuario o realizar otras acciones necesarias
     }
   };
@@ -144,8 +142,9 @@ function SolicitudForm() {
                 id="gender"
                 name="gender"
                 value={formData.person.gender}
-                onChange={handleGenderChange}
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                onChange={handleInputChange}
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+              >
                 <option>Masculino</option>
                 <option>Femenino</option>
               </select>
@@ -230,7 +229,6 @@ function SolicitudForm() {
               />
             </div>
           </div>
-
         </div>
       </div>
 
@@ -244,4 +242,4 @@ function SolicitudForm() {
   );
 }
 
-export default SolicitudForm;
+export default Applications;
