@@ -11,7 +11,7 @@ const Login = () => {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   // Variable que cargara el formulario de registro
-  const [register, setRegister] = useState(false);
+  const [register, setRegister] = useState(true);
 
   const switchToRegisterMode = () => {
     setRegister(!register);

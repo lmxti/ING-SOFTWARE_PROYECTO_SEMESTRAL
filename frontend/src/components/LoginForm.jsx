@@ -42,24 +42,23 @@ const LoginForm = ({ onSwitchMode }) => {
                 </div>
 
                 <form onSubmit={onSubmit}>
-                <div className="space-y-4">
+                    <div className="space-y-4">
                         <input type="email" name="email" placeholder="Email" 
                         onChange={handleChange} value={credentials.email}
                         className="block text-sm py-3 px-4 rounded-lg w-full border outline-none" />
                         <input type="password" name="password" placeholder="Contraseña" 
                         onChange={handleChange} value={credentials.password}
                         className="block text-sm py-3 px-4 rounded-lg w-full border outline-none" />
-                </div>
+                    </div>
 
 
-                <div className="text-center mt-6">
-                    <button className="py-3 w-64 text-xl text-white bg-purple-400 rounded-2xl">
-                        Iniciar sesión
-                    </button>
-
-
-                </div>
+                    <div className="text-center mt-6">
+                        <button className="py-3 w-64 text-xl text-white bg-purple-400 rounded-2xl">
+                            Iniciar sesión
+                        </button>
+                    </div>
                 </form>
+
                 <p className="mt-4 text-sm">
                     ¿No tienes una cuenta? 
                     <span className="underline cursor-pointer" onClick={onSwitchMode}>
