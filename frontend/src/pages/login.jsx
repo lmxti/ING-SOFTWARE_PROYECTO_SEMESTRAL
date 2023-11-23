@@ -47,7 +47,7 @@ const Login = () => {
   return (
     <div>
       {/* Si register es true, se muestra el formulario de registro */}
-      
+
       {
         register ? (
           <RegisterForm onSwitchMode={ switchToRegisterMode } />
@@ -55,7 +55,7 @@ const Login = () => {
           <LoginForm  onSwitchMode={ switchToRegisterMode } />
         )
       }
-      
+
     </div>
   );
 };

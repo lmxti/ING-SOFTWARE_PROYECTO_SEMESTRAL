@@ -1,1 +1,184 @@
-import { useState } from 'react';
+import React from "react";
+
+const ApplicationsForm = ({ formData, handleInputChange, handleSubmit }) => {
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="border-b border-gray-900/10 pb-12">
+        <h2 className="text-base font-semibold leading-7 text-gray-900">
+          Información Personal
+        </h2>
+
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Nombres
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="name"
+                id="name"
+                autoComplete="given-name"
+                onChange={handleInputChange}
+                value={formData.person.name}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="surname"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Apellidos
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="surname"
+                id="surname"
+                autoComplete="given-surname"
+                onChange={handleInputChange}
+                value={formData.person.surname}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="rut"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Rut
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="rut"
+                id="rut"
+                autoComplete="given-rut"
+                onChange={handleInputChange}
+                value={formData.person.rut}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="gender"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Genero
+            </label>
+            <div className="mt-2">
+              <select
+                id="gender"
+                name="gender"
+                value={formData.person.gender}
+                onChange={handleInputChange}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+              >
+                <option>Masculino</option>
+                <option>Femenino</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Direccion
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="address"
+                id="address"
+                autoComplete="given-address"
+                onChange={handleInputChange}
+                value={formData.person.address}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Telefono
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="phone"
+                id="phone"
+                autoComplete="given-phone"
+                onChange={handleInputChange}
+                value={formData.person.phone}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Correo electronico
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="email"
+                id="email"
+                autoComplete="given-email"
+                onChange={handleInputChange}
+                value={formData.person.email}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="grant"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Beca
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="grant"
+                id="grant"
+                onChange={handleInputChange}
+                value={formData.grant}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+      >
+        Enviar Postulación
+      </button>
+    </form>
+  );
+};
+
+export default ApplicationsForm;
