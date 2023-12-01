@@ -10,6 +10,15 @@ const pdfSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        person: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Person",
+            required: true,
+        },
+        nombre: {
+            type: String,
+            required: true,
+        },
     }
 )
 

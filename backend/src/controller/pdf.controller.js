@@ -25,4 +25,32 @@ async function getPDF(req, res) {
     respondSuccess(req, res, 200, pdf);
 }
 
-module.exports = { createPDF, getPDF };
+async function getPDFsForPerson(req, res){
+  try {
+    const { personId } = req.params;
+    const [pdfs, error] = await PDFService.getPDFsForPerson(personId);
+    if (error) {
+      return respondError(req, res, 400, error);
+    }
+    return respondSuccess(req, res, 200, pdfs);
+  } catch (error) {
+    handleError(error, 'pdfController -> getPDFsForPerson');
+    respondError(req, res, 500, 'Error interno del servidor');
+  }
+}
+
+async function deletePDF(req, res) {
+  try {
+    const { id } = req.params;
+    const [pdf, error] = await PDFService.deletePDF(id);
+    if (error) {
+      return respondError(req, res, 400, error);
+    }
+    return respondSuccess(req, res, 200, pdf);
+  } catch (error) {
+    handleError(error, 'pdfController -> deletePDF');
+    respondError(req, res, 500, 'Error interno del servidor');
+  }
+}
+
+module.exports = { createPDF, getPDF, getPDFsForPerson, deletePDF };

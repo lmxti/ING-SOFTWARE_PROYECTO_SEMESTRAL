@@ -1,23 +1,25 @@
 const multer = require("multer");
-const fs = require("fs");
+const fs = require("fs").promises;
 const person = require("../models/person.model.js");
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: async (req, file, cb) => {
+    try{
     const { id } = req.params;
-    person.findById(id).exec().then((foundPerson) => {
+    const foundPerson = await person.findById(id).exec();
       if (!foundPerson) {
-        return Promise.reject("No se encontro la persona");
+        return Promise.reject(new Error("No se encontro la persona"));
       }
-      const dir = "./src/uploads" + foundPerson.name.toString().replace(" ", "_");
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
+      const dir = "./src/uploads/" + foundPerson.name.toString().replace(" ", "_");
+      try{
+        await fs.access(dir);
+      }catch(err){
+        await fs.mkdir(dir, { recursive: true });
       }
       cb(null, dir);
-    })
-    .catch((err) =>{
-      cb(err);
-    })
+    }catch(err){
+      return Promise.reject(err);
+    }
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
