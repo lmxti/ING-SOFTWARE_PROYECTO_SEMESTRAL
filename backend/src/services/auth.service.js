@@ -40,7 +40,7 @@ async function login(person) {
     }
 
     const accessToken = jwt.sign(
-      { email: userFound.email, role: userFound.role },
+      { email: userFound.email, role: userFound.role, id: userFound._id },
       ACCESS_JWT_SECRET,
       {
         expiresIn: "1d",

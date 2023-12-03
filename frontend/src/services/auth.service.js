@@ -10,8 +10,8 @@ export const login = async ({ email, password }) => {
       });
       const { status, data } = response;
       if (status === 200) {
-        const { email, role } = await jwtDecode(data.data.accessToken);
-        localStorage.setItem('user', JSON.stringify({ email, role }));
+        const { email, role, id } = await jwtDecode(data.data.accessToken);
+        localStorage.setItem('user', JSON.stringify({ email, role, id }));
         axios.defaults.headers.common[
           'Authorization'
         ] = `Bearer ${data.data.accessToken}`;

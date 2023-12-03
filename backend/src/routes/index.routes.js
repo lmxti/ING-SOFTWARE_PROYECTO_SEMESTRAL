@@ -10,6 +10,7 @@ const appealRoutes = require("./appeal.routes.js");
 const reviewRoutes = require("./reviewGrant.routes.js");
 const applicationRoutes = require("./application.routes.js");
 const pdfRoutes = require("./pdf.routes.js");
+const requirementRoutes = require("./requirements.routes.js");
 
 // Middleware de autenticacion
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
@@ -23,6 +24,9 @@ router.use("/auth", authRoutes);
 router.use("/persons", authenticationMiddleware, personRoutes);
 // Definicion de las rutas para las becas /api/grants
 router.use("/grants", authenticationMiddleware, grantRoutes);
+
+router.use("/requirements", authenticationMiddleware, requirementRoutes);
+
 
 // RUTAS DE DOMINGO
 router.use("/applications", authenticationMiddleware, applicationRoutes);

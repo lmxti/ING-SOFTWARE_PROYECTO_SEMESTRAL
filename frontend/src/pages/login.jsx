@@ -1,21 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import LoginForm from '../components/LoginForm';
-import { useRouter } from 'next/router';
+import { useState, useEffect} from 'react';
 import { logout } from '@/services/auth.service';
-import RegisterForm from '@/components/RegisterForm';
+import LoginForm from '@/components/LoginForm';
 
 const Login = () => {
-  const router = useRouter();
 
-  // El usuario esta loggeado?
+
   const [userLoggedIn, setUserLoggedIn] = useState(false);
-
-  // Variable que cargara el formulario de registro
-  const [register, setRegister] = useState(true);
-
-  const switchToRegisterMode = () => {
-    setRegister(!register);
-  };
 
   useEffect(() => {
     // Verificar si el usuario está autenticado después de que la página se haya cargado en el cliente
@@ -28,36 +18,21 @@ const Login = () => {
   if (userLoggedIn) {
     return (
       <div>
-        <h2>¡Ya estás logeado!</h2>
-        {/* Botton para cerrar sesion y recargar pagina */}
-        <button
-          onClick={() => {
+      <h2>Ya estas loggeado</h2>
+          <button onClick={() => {
             logout();
-            router.reload('/login');
+            setUserLoggedIn(false);
           }}
-        >
+          >
           Cerrar sesión
         </button>
-        <br />
-        <button onClick={() => router.push('/')}>Ir a home</button>
       </div>
-    );
+    )
   }
 
   return (
-    <div>
-      {/* Si register es true, se muestra el formulario de registro */}
-
-      {
-        register ? (
-          <RegisterForm onSwitchMode={ switchToRegisterMode } />
-        ) : (
-          <LoginForm  onSwitchMode={ switchToRegisterMode } />
-        )
-      }
-
-    </div>
+    <LoginForm />
   );
-};
+}
 
 export default Login;

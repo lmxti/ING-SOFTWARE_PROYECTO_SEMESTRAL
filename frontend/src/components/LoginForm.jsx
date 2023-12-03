@@ -43,12 +43,12 @@ const LoginForm = ({ onSwitchMode }) => {
 
                 <form onSubmit={onSubmit}>
                     <div className="space-y-4">
-                        <input type="email" name="email" placeholder="Email" 
-                        onChange={handleChange} value={credentials.email}
-                        className="block text-sm py-3 px-4 rounded-lg w-full border outline-none" />
-                        <input type="password" name="password" placeholder="Contraseña" 
-                        onChange={handleChange} value={credentials.password}
-                        className="block text-sm py-3 px-4 rounded-lg w-full border outline-none" />
+                        <input type="email" name="email" placeholder="Email" required
+                            onChange={handleChange} value={credentials.email}
+                            className="block text-sm py-3 px-4 rounded-lg w-full border outline-none" />
+                        <input type="password" name="password" placeholder="Contraseña" required
+                            onChange={handleChange} value={credentials.password}
+                            className="block text-sm py-3 px-4 rounded-lg w-full border outline-none" />
                     </div>
 
 
@@ -61,7 +61,7 @@ const LoginForm = ({ onSwitchMode }) => {
 
                 <p className="mt-4 text-sm">
                     ¿No tienes una cuenta? 
-                    <span className="underline cursor-pointer" onClick={onSwitchMode}>
+                    <span className="underline cursor-pointer" onClick={ () => router.push("/register")}>
                         Registrate
                     </span>
                 </p>

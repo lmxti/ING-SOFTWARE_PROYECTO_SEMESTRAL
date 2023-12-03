@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { register } from "@/services/person.service";
 
-const RegisterForm = ({ onSwitchMode }) => {
+const RegisterForm = () => {
   const router = useRouter();
 
   const [registerCredentials, setRegisterCredentials] = useState({
@@ -19,6 +20,7 @@ const RegisterForm = ({ onSwitchMode }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setRegisterCredentials((prevState) => ({
       ...prevState,
       [name]: value,
@@ -27,88 +29,80 @@ const RegisterForm = ({ onSwitchMode }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(registerCredentials);
+    try {
+       const resultado = await register(registerCredentials);
+
+        console.log("se creo el usuario", resultado.data.data.name);
+        console.log("status",resultado.status);
+
+        
+    } catch (error) {
+      console.log("Error en RegisterForm", error);
+    }
   };
 
   return (
-	<div className="text-black min-h-screen bg-slate-800 flex justify-center items-center">
-      <div className="p-6 bg-white rounded-lg shadow-xl max-h-screen overflow-y-auto">
-        <div>
-          <h1 className="text-3xl font-bold text-center mb-4 cursor-pointer">
-            Crea una cuenta
-          </h1>
-          <p className="w-80 text-center text-sm mb-8 font-semibold text-gray-700 tracking-wide cursor-pointer">
-            Crea una cuenta para acceder a todo el contenido de la plataforma.
-          </p>
-        </div>
+    <div className="bg-slate-800 min-h-screen flex justify-center items-center">
+       <div className="bg-white p-12 rounded-xl z-20">
+            <div>
+                <h1 className="text-3xl font-bold text-center mb-4">
+                    Registrate
+                </h1>
+                <p className="text-center text-sm mb-8 font-semibold text-gray-700 tracking-wide">
+                    Registrate para acceder a todo el contenido de la plataforma.
+                </p>
+            </div>
 
-        <form onSubmit={onSubmit}>
-          <div className="space-y-4">
+            <form onSubmit={onSubmit}>
+                <div className="space-y-3">
+                    <input placeholder="Nombre" type="text" name="name" onChange={handleChange} value={registerCredentials.name}
+                      className="block w-full p-2 rounded-lg border outline-border"/>
 
-			{/* Nombre */}
-            <input type="text" placeholder="Nombre" name="name" className="block text-sm py-3 px-4 rounded-lg w-full border outline-none" 
-            	onChange={handleChange} value={registerCredentials.name}/>
+                    <input placeholder="Apellido" type="text" name="surname"  onChange={handleChange} value={registerCredentials.surname}
+                      className="block w-full p-2 rounded-lg border outline-border" />
 
-			{/* Apellido */}
-			<input type="text" placeholder="Apellido" name="surname" className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-				onChange={handleChange} value={registerCredentials.surname} />
+                    <input placeholder="Rut" type="text" name="rut" onChange={handleChange} value={registerCredentials.rut} 
+                      className="block w-full p-2 rounded-lg border outline-border"/>
 
-			{/* Rut */}
-			<input type="text" placeholder="Rut" name="rut" className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-				onChange={handleChange} value={registerCredentials.rut} />
-			
-			{/* Género */}
-			<div className="relative">
-				<select placeholder="Genero" name="gender" className="appearance-none w-full text-gray-700 py-3 px-4 border rounded-lg focus:outline-none"
-				  onChange={handleChange} value={registerCredentials.gender}
-				>
-					<option value="">Género</option>
-					<option value="Masculino">Masculino</option>
-					<option value="Femenino">Femenino</option>
-				</select>
-				<span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-					<svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4">
-						<path d="M6 9l6 6 6-6"></path>
-					</svg>
-				</span>
-			</div>
-			{/* Birthday FORMATEAR FECHA */}
-			<input type="date" placeholder="Fecha de nacimiento" name="birthdate" className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-				onChange={handleChange} value={registerCredentials.birthdate} />
+                    <select placeholder="Género" type="text" name="gender" onChange={handleChange} value={registerCredentials.gender}
+                      className="block w-full p-2 rounded-lg border outline-border">
+                        <option value="" selected disabled>Selecciona género</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
 
-			{/* Dirección */}
-			<input type="text" placeholder="Dirección" name="address" className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-				onChange={handleChange} value={registerCredentials.address} />
 
-			{/* Teléfono */}
-			<input type="text" placeholder="Teléfono" name="phone" className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-				onChange={handleChange} value={registerCredentials.phone} />
+                    <input placeholder="Fecha de Nacimiento" type="date" name="birthdate" onChange={handleChange} value={registerCredentials.birthdate}
+                      className="block w-full p-2 rounded-lg border outline-border" />
 
-			{/* Email */}
-			<input type="email" placeholder="Email" name="email" className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-				onChange={handleChange} value={registerCredentials.email} />
+                    <input placeholder="Direccion" type="text" name="address" onChange={handleChange} value={registerCredentials.address}
+                      className="block w-full p-2 rounded-lg border outline-border"/>
 
-			{/* Password */}
-			<input type="password" placeholder="Contraseña" name="password" className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
-				onChange={handleChange} value={registerCredentials.password} />
-			
+                    <input placeholder="Celular" type="text" name="phone"  onChange={handleChange} value={registerCredentials.phone}
+                      className="block w-full p-2 rounded-lg border outline-border"/>
 
-			</div>
+                    <input placeholder="Correo" type="email" name="email" onChange={handleChange} value={registerCredentials.email}
+                      className="block w-full p-2 rounded-lg border outline-border"/>
 
-          <div className="text-center mt-6">
-            <button className="py-3 w-64 text-xl text-white bg-purple-400 rounded-2xl">
-              Crear cuenta
-            </button>
-          </div>
-        </form>
+                    <input placeholder="Contraseña" type="text" name="password" onChange={handleChange} value={registerCredentials.password}
+                      className="block w-full p-2 rounded-lg border outline-border"/>
 
-        <p className="mt-4 text-sm">
-			¿Ya tienes una cuenta?
-          <span className="underline cursor-pointer" onClick={onSwitchMode}>
-		  	Inicia sesión
-          </span>
-        </p>
-      </div>
+                </div>
+                <div className="text-center mt-6">
+                    <button className="py-3 w-64 text-xl text-white bg-purple-400 rounded-2xl">
+                      Crear cuenta
+                    </button>
+                </div>
+            </form>
+            <p className="mt-4 text-sm">
+                    ¿No tienes una cuenta? 
+                    <span className="underline cursor-pointer" onClick={ () => router.push("/login")}>
+                        Inicia sesión
+                    </span>
+            </p>
+
+       </div>
     </div>
   );
 };

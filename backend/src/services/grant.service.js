@@ -11,7 +11,8 @@ const cron = require('node-cron');
  */
 async function getGrants() {
     try{
-        const grants = await Grant.find().exec();
+        const grants = await Grant.find().populate('requirements').exec();
+        // const grants = await Grant.find().exec();
         if (!grants) {
             return [null, "No hay becas en la base de datos"];
         }
