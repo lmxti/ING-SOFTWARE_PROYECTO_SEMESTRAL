@@ -8,10 +8,12 @@ import { getGrants, desactivateGrantByID, activateGrantByID } from '@/services/g
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 
 const Grant = () => {
-  const [becas, setBecas] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [stateFilter, setStateFilter] = useState(null);
 
+  // Listado de becas por defecto vacio
+  const [becas, setBecas] = useState([]);
+
+  // <------------------------------------ BECAS ------------------------------------>
+  // Funcion que obtiene las becas de BD en el listado de becas
   const setGrant = async () => {
     try {
       const response = await getGrants();
@@ -21,7 +23,12 @@ const Grant = () => {
       console.log(error);
     }
   };
+  // Al renderizar la página se obtienen las becas
+  useEffect(() => {
+    setGrant();
+  }, []);
 
+  // <-------- FUNCION PARA DESACTIVAR UNA BECA -------->
   const desactivateGrant = async (id) => {
     try {
       const response = await desactivateGrantByID(id);
@@ -32,7 +39,7 @@ const Grant = () => {
       console.log(error);
     }
   };
-
+  // <-------- FUNCION PARA ACTIVAR UNA BECA -------->
   const activateGrant = async (id) => {
     try {
       const response = await activateGrantByID(id);
@@ -44,22 +51,25 @@ const Grant = () => {
     }
   };
 
+  // <-------- PERSONALIZACION DE TABLA DE BECAS -------->
 
-
+  // Función que formatea la fecha de creación de la beca
   const formatDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const dia = fechaObj.getDate().toString().padStart(2, '0');
     const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0');
     const anio = fechaObj.getFullYear();
-
     return `${dia}-${mes}-${anio}`;
   };
   
+  // Filtros de búsqueda en la tabla de becas
+  // Filtro de nombre de beca
+  const [searchTerm, setSearchTerm] = useState('');
+  // Filtro de estado de beca
+  const [stateFilter, setStateFilter] = useState(null);
 
-  useEffect(() => {
-    setGrant();
-  }, []);
 
+  // Función que muestra la tabla de becas
   const showGrants = () => {
     // Filtrar becas basándonos en el término de búsqueda y el estado
     const filteredGrants = becas.filter(beca =>

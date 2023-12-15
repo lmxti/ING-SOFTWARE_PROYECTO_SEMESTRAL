@@ -22,13 +22,15 @@ const dashboardAdmin = () => {
         {/* Carta de crear beca */}
         <div className="bg-white p-4 rounded-lg shadow-md cursor-pointer" onClick={crearBeca}>
             <h3 className="text-lg font-semibold mb-4">Publicar beca</h3>
-            <p className="text-gray-600">Tu perfil y datos personales.</p>
+            <p className="text-gray-600">Crea y publica una beca</p>
         </div>
 
         {/* Carta de Becas */}
         <div className="bg-white p-4 rounded-lg shadow-md" onClick={verBecas}>
             <h3 className="text-lg font-semibold mb-4">Becas</h3>
-            <p className="text-gray-600">Becas disponibles para postular.</p>
+            <p className="text-gray-600">
+                Explora la lista de becas, desde aqui puedes habilitar y deshabilitar becas
+            </p>
         </div>
 
         {/* Carta de Postulaciones */}

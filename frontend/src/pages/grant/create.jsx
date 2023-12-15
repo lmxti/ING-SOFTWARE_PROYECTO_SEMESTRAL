@@ -2,13 +2,20 @@
 import { useEffect, useState } from "react";
 // <----------------- COMPONENTES --------------->
 import NavBar from '@/components/NavBar'
+import Select from "react-select";
 // <--------------- SERVICIOS ---------------->
 import { createGrant } from "@/services/grant.service";
 import { getRequirements } from "@/services/requirement.service";
 // <----------------- ICONOS ----------------->
 import { IoClose } from "react-icons/io5";
 
+
+
 const CreateGrant = () => {
+
+  const documents = require('../../../../backend/src/constants/documents.constants')
+
+  const [isNameAvailable, setIsNameAvailable] = useState(true);
 
   // Formulario de creación de beca (grant) por defecto vacio
   const [grant, setGrant] = useState({
@@ -21,13 +28,13 @@ const CreateGrant = () => {
   // Función que actualiza el formulario de creación de beca
   const onChange = (e) => {
     const { name, value } = e.target;
-    setGrant((prevState) => {
-      return {
-        ...prevState,
-        [name]: ['requirements', 'documents'].includes(name) ? (value ? value.split(',') : []) : value,
-      };
-    });
+
+    setGrant((prevGrant) => ({
+      ...prevGrant,
+      [name]: name === 'documents' ? [value] : (name === 'requirements' ? [value] : value),
+    }));
   };
+
 
   // <------------------------------------ REQUERIMIENTOS ------------------------------------>
   
@@ -44,51 +51,16 @@ const CreateGrant = () => {
       console.log("Error getRequirements", error);
     }
   };
-
   // Al renderizar la página se obtienen los requerimientos
   useEffect(() => {
     getRequirement();
   }, []);
 
-  // <-------- FUNCION PARA AGREGAR UN REQUERIMIENTO AL ARRAY -------->
-  const agregarRequerimiento = () => {
-    setGrant((prevState) => ({
-      ...prevState,
-      requirements: [...prevState.requirements, ""],
-    }));
-  };
-  
-  // <------- FUNCION PARA ELIMINAR UN REQUERIMIENTO DEL ARRAY ------->
-  const eliminarRequerimiento = (index) => {
-    if (grant.requirements.length > 1) {
-      const updatedRequirements = [...grant.requirements];
-      updatedRequirements.splice(index, 1);
-      setGrant((prevState) => ({
-        ...prevState,
-        requirements: updatedRequirements,
-      }));
-    } else{
-      alert("Debes tener al menos un requerimiento");
-    }
-  };
-  
-  // Funcion que actualiza valor de requerimiento en el listado del formulario de creación de beca
-  const handleRequirementChange = (index, e) => {
-    // updateRequirement almacena los requerimientos actuales
-    const updatedRequirements = [...grant.requirements];
-    // Se actualiza el requerimiento en la posición index
-    updatedRequirements[index] = e.target.value;
-    // Se actualiza el listado de requerimientos del formulario
-    setGrant((prevState) => ({
-      ...prevState,
-      requirements: updatedRequirements,
-    }));
-  };
   
   // <----------------------------- SOLICITUD DE CREACION DE BECA ---------------------------->
   const onSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("Grant", grant);
     // Verificacion de que existan requerimientos seleccionados para la beca
     if (grant.requirements.every(req => req !== "")) {
         try {
@@ -126,48 +98,62 @@ const CreateGrant = () => {
           {/* Formulario */}
           <form className="space-y-4" onSubmit={onSubmit}>
 
-              <input required placeholder="Ingresa nombre de beca" name="name" value={grant.name} onChange={onChange}
+          <input required placeholder="Ingresa nombre de beca" name="name" value={grant.name} onChange={onChange}
                 className="block w-full p-2 rounded-lg border outline-border" />
-            
-              <div className="space-y-4">
-                {grant.requirements.map((requirement, index) => (
-                  <div key={index} className="flex" >
-                    <select required onChange={(e) => handleRequirementChange(index, e)} value={requirement}
-                      className="w-full p-4 rounded-lg border outline-border" placeholder
-                    >
-                      <option defaultChecked >Selecciona requerimiento de beca</option>
-                      {requirements.map((req) => (
-                        <option key={req._id} value={req._id}>
-                          {req.name}
-                        </option>
-                      ))}
-                    </select>
-                    <button className="flex justify-center items-center bg-blue-200 mx-1 px-3 rounded-2xl" type="button" onClick={() => eliminarRequerimiento(index)}>
-                      <IoClose size={30}/>
-                    </button>
-                  </div>
-                ))}
+        
+
+              <Select
+                  
+                  isMulti
+                  placeholder="Selecciona requerimientos"
+                  options={requirements.map((req) => ({
+                    value: req._id,
+                    label: req.name,
+                  }))}
+                  onChange={(selectedOptions) =>
+                    setGrant((prevGrant) => ({
+                      ...prevGrant,
+                      requirements: selectedOptions.map((option) => option.value),
+                    }))
+                  }
+              />
+
+              <Select
+                  isMulti
+                  placeholder="Selecciona documentos"
+                  options={documents.map((doc) => ({
+                    value: doc,
+                    label: doc,
+                  }))}
+                  onChange={(selectedOptions) =>
+                    setGrant((prevGrant) => ({
+                      ...prevGrant,
+                      documents: selectedOptions.map((option) => option.value),
+                    }))
+                  }
+              />
+
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+                  $
+                </span>
+                <input
+                  required
+                  placeholder="Ingrese monto de beca"
+                  type="number"
+                  name="amount"
+                  value={grant.amount}
+                  onChange={onChange}
+                  className="block w-full pl-8 pr-3 py-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
               </div>
-
-              <button type="button" onClick={agregarRequerimiento} className="block w-full p-2 rounded-lg border outline-border bg-blue-200">
-                Agregar Requerimiento
-              </button>
-
-              <input required placeholder="Documentos" name="documents" value={grant.documents} onChange={onChange}
-                className="block w-full p-2 rounded-lg border outline-border"/>
-
-              <input required placeholder="Monto" type="number" name="amount" value={grant.amount} onChange={onChange}
-                className="block w-full p-2 rounded-lg border outline-border"/>
 
               <div className="text-center mt-6">
                 <button className="py-3 w-64 text-xl text-white bg-blue-500 rounded-2xl">
-                  Crear cuenta
+                  Publicar beca
                 </button>
               </div>
           </form>
-
-          
-
         </div>
       </div>
     </>

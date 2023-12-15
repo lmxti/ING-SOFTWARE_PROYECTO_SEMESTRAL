@@ -176,7 +176,7 @@ async function checkGrant() {
     try {
         const becas = await Grant.find({state: true});
         becas.forEach(async (beca) => {
-        const fechaCreacion = beca.created_at;
+        const fechaCreacion = beca.createdAt;
   
         // Calcular la diferencia de tiempo en milisegundos
         const diferenciaTiempo = Date.now() - fechaCreacion.getTime();

@@ -1,4 +1,3 @@
-const moongose = require('mongoose');
 
 const documents = [
     "Certificado de estudios",

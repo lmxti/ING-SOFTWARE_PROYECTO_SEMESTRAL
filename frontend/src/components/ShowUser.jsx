@@ -22,11 +22,14 @@ const ShowUser = () => {
     router.push('/');
   };
 
+ 
+
+
   return (
     <div className="relative inline-block">
       <img
-        src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1480&amp;q=80"
-        className="cursor-pointer rounded-full h-12 w-12"
+        src={`https://robohash.org/${currentUser.id}`}      
+        className="cursor-pointer rounded-full h-12 w-12 bg-white"
         onClick={toggleMenu}
       />
 
