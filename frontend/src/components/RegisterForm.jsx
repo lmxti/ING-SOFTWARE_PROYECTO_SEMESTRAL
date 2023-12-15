@@ -97,7 +97,7 @@ const RegisterForm = () => {
             </form>
             <p className="mt-4 text-sm">
                     ¿No tienes una cuenta? 
-                    <span className="underline cursor-pointer" onClick={ () => router.push("/login")}>
+                    <span className="underline cursor-pointer" onClick={ () => router.push("/auth/login")}>
                         Inicia sesión
                     </span>
             </p>

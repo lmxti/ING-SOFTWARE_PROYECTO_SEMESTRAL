@@ -12,7 +12,7 @@ const Home = () => {
         </a>
 
 
-        <a href='/login'>
+        <a href='/auth/login'>
           <button  className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Iniciar sesion
           </button>

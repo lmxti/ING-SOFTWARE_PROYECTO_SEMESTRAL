@@ -12,7 +12,7 @@ export function AuthProvider({children}){
 
     useEffect(() => {
       // redirect to home if not authenticated y solo acceso a register
-        const allowedRoutes = ['/register', '/', '/login'];
+        const allowedRoutes = ['/auth/register', '/', '/auth/login'];
         if (!isAuthenticated && !allowedRoutes.includes(router.pathname)) {
           router.push("/");
         }

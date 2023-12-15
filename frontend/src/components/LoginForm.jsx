@@ -61,7 +61,7 @@ const LoginForm = ({ onSwitchMode }) => {
 
                 <p className="mt-4 text-sm">
                     ¿No tienes una cuenta? 
-                    <span className="underline cursor-pointer" onClick={ () => router.push("/register")}>
+                    <span className="underline cursor-pointer" onClick={ () => router.push("/auth/register")}>
                         Registrate
                     </span>
                 </p>

@@ -19,3 +19,18 @@ export const createGrant = async (grant) => {
     }
 };
 
+export const desactivateGrantByID = async (id) => {
+    try {
+        return axios.put(`/grants/desactivate/${id}`);
+    } catch (error) {
+        console.log('Error en grant.service -> desactivateGrant', error.message);
+    }
+};
+
+export const activateGrantByID = async (id) => {
+    try {
+        return axios.put(`/grants/activate/${id}`);
+    } catch (error) {
+        console.log('Error en grant.service -> activateGrant', error.message);
+    }
+};
