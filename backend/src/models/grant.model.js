@@ -11,6 +11,8 @@ const grantSchema = new mongoose.Schema({
         amount: { type: Number, required: true,},
         // Estado de la beca true:abierta y false:cerrada
         state: { type: Boolean, required: true, default: true,},
+        // Fecha de activacion de la beca
+        activationDate: { type: Date, required: true, default: Date.now },
     },
     // Configuración de opciones
     {

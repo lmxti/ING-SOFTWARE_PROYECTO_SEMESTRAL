@@ -8,7 +8,7 @@ import Mensajes from "@/components/mensajes";
 import { createGrant } from "@/services/grant.service";
 import { getRequirements } from "@/services/requirement.service";
 // <----------------- ICONOS ----------------->
-import { IoClose } from "react-icons/io5";
+
 
 
 
@@ -16,12 +16,10 @@ const CreateGrant = () => {
 
   const documents = require('../../../../backend/src/constants/documents.constants')
 
-  const [isNameAvailable, setIsNameAvailable] = useState(true);
-
   // Formulario de creación de beca (grant) por defecto vacio
   const [grant, setGrant] = useState({
     name: "",
-    requirements: [""],
+    requirements: [],
     documents: [],
     amount: "",
   });
@@ -67,11 +65,11 @@ const CreateGrant = () => {
         try {
           // Solicitud de creación de beca
           const response = await createGrant(grant);
-          Mensajes.mensajeExito("Beca creada exitosamente");
+          Mensajes.mensajeExito(`Se ha creado la ${response.data.data.data.name} beca exitosamente, puedes encontrarla en la sección de becas`);
         } 
         catch (error) {
           console.log("Error LoginForm", error);
-          Mensajes.mensajeError("Error al crear beca");
+          Mensajes.mensajeError(error.response.data.message || "Error al crear beca");
         }
     } else {
       // Si no hay requerimientos seleccionados, se muestra un mensaje de alerta

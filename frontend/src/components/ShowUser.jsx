@@ -3,11 +3,13 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
 
 
+
 const ShowUser = () => {
 
   const router = useRouter();
 
   const { user: currentUser } = useAuth();
+  console.log("Este es el currentUser: ", currentUser.id);
   
   // const emailLetter = currentUser.email[0]?.toUpperCase();
 
@@ -22,14 +24,18 @@ const ShowUser = () => {
     router.push('/');
   };
 
+  const handleProfile = () => {
+    console.log("Vamos a ir al perfil del usuario: ", currentUser.id);
+    router.push(`/usuario/${currentUser.id}`);
+  };
  
 
 
   return (
     <div className="relative inline-block">
       <img
-        src={`https://robohash.org/${currentUser.id}`}      
-        className="cursor-pointer rounded-full h-12 w-12 bg-white"
+        src="/images/iconos/icono-persona.png"     
+        className="cursor-pointer rounded-full h-12 w-12 bg-slate-200 p-2"
         onClick={toggleMenu}
       />
 
@@ -44,10 +50,10 @@ const ShowUser = () => {
             <p>Inicio</p>
           </button>
 
-          {/*
-          <button tabIndex="-1" role="menuitem" className="w-full flex items-center justify-center py-2 px-3 rounded-md text-sm  text-gray-600 hover:bg-blue-50">
+          
+          <button onClick={handleProfile} tabIndex="-1" role="menuitem" className="w-full flex items-center justify-center py-2 px-3 rounded-md text-sm  text-gray-600 hover:bg-blue-50">
             <p>Perfil</p>
-          </button> */}
+          </button>
 
           <button onClick={handleLogout} tabIndex="-1" className="w-full flex items-center justify-center py-2 px-3 rounded-md text-sm  text-gray-600 hover:bg-blue-50">
             <p>Cerrar sesión</p>

@@ -17,7 +17,7 @@ router.use(authenticationMiddleware);
 // Define las rutas para los usuarios
 router.get("/",  personController.getPersons);
 router.post("/", personController.createPerson);
-router.get("/:id", authorizationMiddleware.isAdmin, personController.getPersonById);
+router.get("/:id", personController.getPersonById);
 router.put("/:id", authorizationMiddleware.isAdmin, personController.updatePersonById);
 router.delete("/:id", authorizationMiddleware.isAdmin, personController.deletePerson);
 

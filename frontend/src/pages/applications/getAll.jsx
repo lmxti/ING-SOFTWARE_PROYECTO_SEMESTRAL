@@ -4,6 +4,7 @@ import NavBar from '@/components/NavBar';
 import Mensajes from '@/components/mensajes';
 
 const getAllApplications = () => {
+
   const [applications, setApplications] = useState([]);
 
   const setApplication = async () => {

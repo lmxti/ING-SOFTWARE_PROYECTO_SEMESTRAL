@@ -4,14 +4,33 @@ import { useState, useEffect } from 'react';
 import NavBar from '@/components/NavBar';
 import Mensajes from '@/components/mensajes';
 // <--------------- SERVICIOS ---------------->
+import { useAuth } from '../../context/AuthContext';
 import { getGrants, desactivateGrantByID, activateGrantByID } from '@/services/grant.service';
 // <----------------- ICONOS ----------------->
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 
 const Grant = () => {
-
+  
   // Listado de becas por defecto vacio
   const [becas, setBecas] = useState([]);
+
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+
+
+  useEffect(() => {
+    if (user && user.role) {
+      setLoading(false);
+    }
+  }, [user]);
+
+  if (loading) {
+    console.log("Cargando...", user.role ? user.role.name : "Role no definido");
+  }
+  
+  
+
 
   // <------------------------------------ BECAS ------------------------------------>
   // Funcion que obtiene las becas de BD en el listado de becas
@@ -19,7 +38,7 @@ const Grant = () => {
     try {
       const response = await getGrants();
       setBecas(response.data.data.data);
-      console.log(response.data.data.data);
+      console.log("Estas son las becas de setGrant: ",response.data.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -30,27 +49,25 @@ const Grant = () => {
   }, []);
 
   // <-------- FUNCION PARA DESACTIVAR UNA BECA -------->
-  const desactivateGrant = async (id) => {
+  const desactivateGrant = async (id, nombreBeca) => {
     try {
       const response = await desactivateGrantByID(id);
-      console.log(response);
       setGrant();
-      Mensajes.mensajeExito('Beca desactivada');
+      Mensajes.mensajeExito(`Has desactivado la beca ${nombreBeca}, ya no estará disponible para la comunidad. `);
     } catch (error) {
       console.log(error);
-      Mensajes.mensajeError('Error al desactivar beca');
+      Mensajes.mensajeError('Ocurrió un error inesperado al desactivar beca, intenta nuevamente.');
     }
   };
   // <-------- FUNCION PARA ACTIVAR UNA BECA -------->
-  const activateGrant = async (id) => {
+  const activateGrant = async (id, nombreBeca) => {
     try {
       const response = await activateGrantByID(id);
-      console.log(response);
       setGrant();
-      Mensajes.mensajeExito('Beca activada');
+      Mensajes.mensajeExito(`Has activado la beca ${nombreBeca}, ya estará disponible para la comunidad.`);
     } catch (error) {
       console.log(error);
-      Mensajes.mensajeError('Error al activar beca');
+      Mensajes.mensajeError('Ocurrió un error inesperado al activar beca, intenta nuevamente.');
     }
   };
 
@@ -107,6 +124,14 @@ const Grant = () => {
             <option value="true">Activas</option>
             <option value="false">Inactiva</option>
           </select>
+
+          {user && user.role.name === 'admin' && (
+              <div className='flex justify-center items-center'>
+                <button className=' bg-blue-900 hover:bg-blue-500 hover:text-blue-100 text-blue-300 border border-blue-300 p-2 rounded-xl'>
+                  <a href='/grant/create'>Crear nueva beca</a>
+                </button>
+              </div>
+            )}
         </div>
 
         <table className="min-w-full bg-blue-50 border border-gray-300">
@@ -116,9 +141,13 @@ const Grant = () => {
               <th className="border border-blue-300 px-4 py-2">Requisitos</th>
               <th className="border border-blue-300 px-4 py-2">Documentos</th>
               <th className="border border-blue-300 px-4 py-2">Monto</th>
-              <th className="border border-blue-300 px-4 py-2 w-1/6">Fecha de Creación</th>
+              <th className="border border-blue-300 px-4 py-2 w-1/6">Ult. activacion</th>
               <th className='border border-blue-300 px-4 py-2'>Estado</th>
-              <th className="border border-blue-300 ">Accion</th>
+              {user && user.role.name === 'admin' && (
+                <>
+                  <th className="border border-blue-300 px-4 py-2">Acciones</th>
+                </>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -146,28 +175,32 @@ const Grant = () => {
                   </td>
 
                   <td className="border border-blue-300 px-4 py-2 font-thin">
-                    {formatDate(beca.createdAt)}
+                    {formatDate(beca.activationDate)}
                   </td>
 
                   <td className="border border-blue-300 px-4 py-2 font-thin"> 
-                    {beca.state === true ? 'Activa' : beca.state === false ? 'Inactiva' : 'Estado Desconocido'}
+                    {beca.state === true ? 'Activa' : beca.state === false ? 'Desactivada' : 'Estado Desconocido'}
                   </td>
 
+               {/* Mostrar acciones específicas para administradores */}
+                {user && user.role.name === 'admin' && (
                   <td className="border border-blue-300 px-4 py-2 font-thin">
                     <div className='flex justify-center items-center'>
-                      <button className='p-4 hover:text-blue-500'>
+                      <button className='p-4 hover:text-blue-500 bg-slate-200 hover:bg-black rounded-md'>
                         { beca.state === true
-                            ? (<IoEyeOff title='Desactivar'onClick={ () => desactivateGrant(beca._id)}/>)
-                            : <IoEye title='Activar' onClick={ () => activateGrant(beca._id) }/>
+                            ? (<IoEyeOff title='Desactivar' onClick={() => desactivateGrant(beca._id, beca.name)}/>)
+                            : <IoEye title='Activar' onClick={() => activateGrant(beca._id, beca.name)}/>
                           }
                       </button>
                     </div>
                   </td>
+                )}
 
               </tr>
             ))}
           </tbody>
         </table>
+
       </div>
     );
   };

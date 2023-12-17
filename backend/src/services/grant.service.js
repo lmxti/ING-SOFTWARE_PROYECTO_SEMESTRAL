@@ -159,7 +159,10 @@ async function activateGrantById(id) {
     try {
         const grantFound = await Grant.findById(id);
         if (!grantFound) return [null, "No se encontró la beca"];
-        const grantActivated = await Grant.findByIdAndUpdate(id, {state: true}, { new: true });
+        const grantActivated = await Grant.findByIdAndUpdate(
+            id,
+            {state: true, activationDate: Date.now()},
+            { new: true });
         return [grantActivated, null];
     } catch (error) {
         handleError(error, "grant.service -> activateGrant");
@@ -176,10 +179,10 @@ async function checkGrant() {
     try {
         const becas = await Grant.find({state: true});
         becas.forEach(async (beca) => {
-        const fechaCreacion = beca.createdAt;
+        const fechaActivacion = beca.activationDate;
   
         // Calcular la diferencia de tiempo en milisegundos
-        const diferenciaTiempo = Date.now() - fechaCreacion.getTime();
+        const diferenciaTiempo = Date.now() - fechaActivacion.getTime();
         const diasTranscurridos = diferenciaTiempo / (1000 * 3600 * 24); // Convertir a días
   
         // Si han pasado 15 días desde la creación de la beca, se desactiva

@@ -4,7 +4,7 @@ const Mensajes ={
     mensajeError: (mensaje) => {
         Swal.fire({
             icon: 'error',
-            title: 'Oops...',
+            title: 'Ha ocurrido un problema',
             text: mensaje,
         });
     },
