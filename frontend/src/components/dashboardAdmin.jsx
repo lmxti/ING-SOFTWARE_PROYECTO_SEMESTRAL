@@ -14,6 +14,10 @@ const dashboardAdmin = () => {
         router.push("/grant")
 
     }
+    // Funcion para ver las postulaciones
+    const verPostulaciones = () => {
+        router.push("/applications/getAll")
+    }
 
   return (
     <div className="container mx-auto mt-8 ">
@@ -26,7 +30,7 @@ const dashboardAdmin = () => {
         </div>
 
         {/* Carta de Becas */}
-        <div className="bg-white p-4 rounded-lg shadow-md" onClick={verBecas}>
+        <div className="bg-white p-4 rounded-lg shadow-md cursor-pointer" onClick={verBecas}>
             <h3 className="text-lg font-semibold mb-4">Becas</h3>
             <p className="text-gray-600">
                 Explora la lista de becas, desde aqui puedes habilitar y deshabilitar becas
@@ -34,17 +38,16 @@ const dashboardAdmin = () => {
         </div>
 
         {/* Carta de Postulaciones */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-white p-4 rounded-lg shadow-md cursor-pointer" onClick={verPostulaciones}>
             <h3 className="text-lg font-semibold mb-4">Postulaciones</h3>
-            <p className="text-gray-600">Estado de tus postulaciones.</p>
+            <p className="text-gray-600">Estado de postulaciones.</p>
         </div>
 
         {/* Carta de Historial */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-white p-4 rounded-lg shadow-md cursor-pointer">
             <h3 className="text-lg font-semibold mb-4">Historial</h3>
             <p className="text-gray-600">Tu historial y actividades anteriores.</p>
         </div>
-        
     </div>
 </div>
   )

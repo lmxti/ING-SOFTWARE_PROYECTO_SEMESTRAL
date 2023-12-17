@@ -39,10 +39,11 @@ async function getApplications(req, res) {
 }
 
 async function updateApplication(req, res) {
+  const { id } = req.params;
+  const updateFields = req.body;
   try {
     // Destructuracion de datos de la postulacion
-    const { body } = req;
-    const [updatedApplication, applicationError] = await ApplicationService.updateApplication(body);
+    const [updatedApplication, applicationError] = await ApplicationService.updateApplication(id, updateFields);
     // Si ocurre un error
     if (applicationError) {
       return respondError(req, res, 400, applicationError);

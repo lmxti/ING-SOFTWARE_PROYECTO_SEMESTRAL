@@ -8,3 +8,11 @@ export const register = async (registerCredentials) => {
         console.log('Error en person.service -> register', error.message);
     }
 };
+
+export const getPersonById = async (id) => {
+    try {
+        return axios.get(`/persons/${id}`);
+    } catch (error) {
+        console.log('Error en person.service -> getPersonById', error.message);
+    }
+};

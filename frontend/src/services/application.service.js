@@ -1,23 +1,26 @@
-import axios from 'axios';
-import cookies from "js-cookie";
+import axios from "./root.service";
 
-const applicationService = async (formData) => {
+export const getApplications = async () => {
     try {
-        const token = cookies.get("jwt-auth");
-        const response = await axios.post(
-            "http://localhost:3001/api/applications/",
-            formData,{
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token,
-                },
-            }
-        );
-        return response.data;
+        return axios.get("/applications");
     } catch (error) {
-        console.error("Error al enviar la solicitud de postulacion: ", error.response.data);
-        throw error;
+        console.log('Error en application.service -> getApplications', error.message);
     }
 };
 
-export default applicationService;
+export const createApplication = async (formData) => {
+    try {
+        return axios.post("/applications", formData);
+
+    } catch (error) {
+        console.log('Error en application.service -> createApplication', error.message);
+    }
+};
+
+export const updateApplication = async (id, formData) => {
+    try {
+        return axios.put(`/applications/${id}`, formData);
+    } catch (error) {
+        console.log('Error en application.service -> updateApplication', error);
+    }
+}

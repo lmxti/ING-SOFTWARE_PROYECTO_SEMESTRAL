@@ -1,6 +1,7 @@
 import axios from './root.service';
 import cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
+import Mensajes from '@/components/mensajes';
 
 export const login = async ({ email, password }) => {
     try {
@@ -17,8 +18,10 @@ export const login = async ({ email, password }) => {
         ] = `Bearer ${data.data.accessToken}`;
         cookies.set('jwt-auth', data.data.accessToken, { path: '/' });
       }
+      Mensajes.mensajeExito("Bienvenido");
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
+      Mensajes.mensajeError(error.response.data.message);
     }
   };
 

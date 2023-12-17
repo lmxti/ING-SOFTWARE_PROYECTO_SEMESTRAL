@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 // <----------------- COMPONENTES --------------->
 import NavBar from '@/components/NavBar';
+import Mensajes from '@/components/mensajes';
 // <--------------- SERVICIOS ---------------->
 import { getGrants, desactivateGrantByID, activateGrantByID } from '@/services/grant.service';
 // <----------------- ICONOS ----------------->
@@ -34,9 +35,10 @@ const Grant = () => {
       const response = await desactivateGrantByID(id);
       console.log(response);
       setGrant();
-      alert('Beca desactivada');
+      Mensajes.mensajeExito('Beca desactivada');
     } catch (error) {
       console.log(error);
+      Mensajes.mensajeError('Error al desactivar beca');
     }
   };
   // <-------- FUNCION PARA ACTIVAR UNA BECA -------->
@@ -45,9 +47,10 @@ const Grant = () => {
       const response = await activateGrantByID(id);
       console.log(response);
       setGrant();
-      alert('Beca activada');
+      Mensajes.mensajeExito('Beca activada');
     } catch (error) {
       console.log(error);
+      Mensajes.mensajeError('Error al activar beca');
     }
   };
 

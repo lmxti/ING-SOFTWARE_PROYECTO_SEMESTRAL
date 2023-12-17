@@ -87,25 +87,19 @@ async function getApplications() {
     }
 }
 
-async function updateApplication(application) {
+async function updateApplication(id, updateFields) {
     try{
-        const { person_id, grant_id, documents } = application;
-        // Busqueda de persona
-        const personFound = await Person.findById(person_id);
-        // Si no se encuentra la persona
-        if (!personFound) {
-            return [null, 'No se encontro la persona'];
-        }
-        // Busqueda de beca
-        const becaFound = await Grant.findById(grant_id);
-        // Si no se encuentra la beca
-        if (!becaFound) {
-            return [null, 'No se encontro la beca'];
-        }
         // Actualizacion de postulacion
-        const applicationUpdated = await Application.findOneAndUpdate({ person: person_id }, { grant: grant_id, documents }, { new: true }).populate('person', '-password -_id -role').populate('grant', '-_id -state -__v');
+        const application = await Application.findById(id);
+
+        if(!application){
+            return [null, 'No se encontro la postulacion'];
+        }
+
+        Object.assign(application, updateFields);
+        const updatedApplication = await application.save();
         // Retorno de datos
-        return [applicationUpdated, null];
+        return [updatedApplication, null];
     }catch(error){
         handleError(error, 'application.service -> updateApplication');
     }
@@ -138,5 +132,5 @@ module.exports = {
     getApplications,
     updateApplication,
     deleteApplication,
-    getApplicationById
+    getApplicationById,
 }

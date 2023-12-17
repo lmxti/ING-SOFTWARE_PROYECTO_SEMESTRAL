@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { register } from "@/services/person.service";
+import Mensajes from "./mensajes";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -27,17 +28,58 @@ const RegisterForm = () => {
     }));
   };
 
+  // Función para validar un RUT
+const validarRut = (rut) => {
+  // Expresión regular para validar el formato del RUT
+  const rutRegex = /^0*(\d{1,3}(\.?\d{3})*)-?([\dkK])$/;
+
+  if (!rutRegex.test(rut)) {
+    return false; // El formato del RUT es incorrecto
+  }
+
+  // Separar el número y el dígito verificador
+  const [numero, dv] = rut.replace(".", "").split("-");
+  const numeroArray = numero.split("").reverse();
+
+  // Calcular el dígito verificador esperado
+  let acumulado = 0;
+  let multiplicador = 2;
+
+  for (let i = 0; i < numeroArray.length; i++) {
+    acumulado += parseInt(numeroArray[i]) * multiplicador;
+    multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+  }
+
+  const resto = acumulado % 11;
+  const dvCalculado = 11 - resto;
+
+  const dvEsperado = dvCalculado === 11 ? "0" : dvCalculado === 10 ? "K" : dvCalculado.toString();
+
+  return dv.toUpperCase() === dvEsperado; // Devuelve true si el RUT es válido
+};
+
+
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (!validarRut(registerCredentials.rut)) {
+      Mensajes.mensajeError("Rut no valido");
+      return;
+    }
     try {
        const resultado = await register(registerCredentials);
 
         console.log("se creo el usuario", resultado.data.data.name);
         console.log("status",resultado.status);
 
-        
+        if(resultado.status === 201){
+          Mensajes.mensajeExito("Usuario creado exitosamente");
+          router.push("/auth/login");
+        }
+
     } catch (error) {
-      console.log("Error en RegisterForm", error);
+      console.log("Error en RegisterForm", error.response.data.message);
+      const mensaje = error.response.data.message;
+      Mensajes.mensajeError(mensaje);
     }
   };
 

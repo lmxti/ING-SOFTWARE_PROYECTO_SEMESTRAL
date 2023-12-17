@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 // <----------------- COMPONENTES --------------->
 import NavBar from '@/components/NavBar'
 import Select from "react-select";
+import Mensajes from "@/components/mensajes";
 // <--------------- SERVICIOS ---------------->
 import { createGrant } from "@/services/grant.service";
 import { getRequirements } from "@/services/requirement.service";
@@ -66,16 +67,15 @@ const CreateGrant = () => {
         try {
           // Solicitud de creación de beca
           const response = await createGrant(grant);
-          alert("¡La beca se ha creado exitosamente!");
-
+          Mensajes.mensajeExito("Beca creada exitosamente");
         } 
         catch (error) {
           console.log("Error LoginForm", error);
-          alert("¡Hubo un error al crear la beca!");
+          Mensajes.mensajeError("Error al crear beca");
         }
     } else {
       // Si no hay requerimientos seleccionados, se muestra un mensaje de alerta
-      alert("Debes seleccionar al menos un requerimiento.");
+      Mensajes.mensajeError("Debe seleccionar al menos un requerimiento");
     }
   }
 

@@ -1,11 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import NavBar from "@/components/NavBar";
+import { createApplication } from "@/services/application.service";
+import { getGrants } from "@/services/grant.service";
+import Mensajes from "@/components/mensajes";
+import { useRouter } from "next/router";
 
-const ApplicationsForm = ({ formData, handleInputChange, handleSubmit }) => {
+const Applications = () => {
+  const [formData, setFormData] = useState({
+    person: {
+      name: "",
+      surname: "",
+      rut: "",
+      gender: "",
+      address: "",
+      phone: "",
+      email: "",
+    },
+    grant: "",
+  });
+  const router = useRouter();
+
+  const [grantOptions, setGrantOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchGrants = async () => {
+      try {
+        const grants = await getGrants();
+        setGrantOptions(grants.data.data.data);
+      } catch (error) {
+        console.error("Error al obtener becas:", error);
+      }
+    };
+
+    fetchGrants();
+  }, []);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      person: {
+        ...prevData.person,
+        [name]: value,
+      },
+      grant: name === "grant" ? value : prevData.grant,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      await createApplication(formData);
+      Mensajes.mensajeExito("Postulación enviada exitosamente");
+    } catch (error) {
+      console.error(
+        "Error en la solicitud de postulación:", error.response.data);
+      Mensajes.mensajeError(error.response.data.message);
+    }
+  };
+
+  const subirPDF = () => {
+    router.push("/pdfs/subidaPDF");
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <>
+    <NavBar />
+    <form onSubmit={handleSubmit} className="m-4">
       <div className="border-b border-gray-900/10 pb-12">
-        <h2 className="text-base font-semibold leading-7 text-gray-900">
-          Información Personal
+        <h2 className="text-base font-semibold leading-7 text-gray-900 flex justify-center">
+          Formulario de postulación
         </h2>
 
         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -84,6 +149,7 @@ const ApplicationsForm = ({ formData, handleInputChange, handleSubmit }) => {
                 onChange={handleInputChange}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
               >
+                <option value="">Selecciona un genero</option>
                 <option>Masculino</option>
                 <option>Femenino</option>
               </select>
@@ -158,14 +224,20 @@ const ApplicationsForm = ({ formData, handleInputChange, handleSubmit }) => {
               Beca
             </label>
             <div className="mt-2">
-              <input
-                type="text"
+              <select
                 name="grant"
                 id="grant"
                 onChange={handleInputChange}
                 value={formData.grant}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
+              >
+              <option value="">Selecciona una beca</option>
+              {grantOptions.map((grant) => (
+                <option key={grant.id} value={grant.id}>
+                  {grant.name}
+                </option>
+              ))}
+              </select>
             </div>
           </div>
         </div>
@@ -177,8 +249,12 @@ const ApplicationsForm = ({ formData, handleInputChange, handleSubmit }) => {
       >
         Enviar Postulación
       </button>
+      <div className="bg-white p-4 rounded-lg shadow-md cursor-pointer" onClick={subirPDF}>
+            <h3 className="text-lg font-semibold mb-4">Subir documentos</h3>
+      </div>
     </form>
+    </>
   );
-};
+}
 
-export default ApplicationsForm;
+export default Applications;
