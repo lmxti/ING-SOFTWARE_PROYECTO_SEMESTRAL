@@ -45,41 +45,41 @@ async function createGrant(req, res) {
             data: newGrant,
         });
 
-        // // Obtencion de becas en la base de datos
-        // const [allGrants, errorGrants] = await GrantService.getGrants();
-        // if (errorGrants) {
-        //     return respondError(
-        //         res,
-        //         500,
-        //         "Error al obtener las becas",
-        //         errorGrants
-        //     );
-        // }
-        // // Busqueda de personas (usuarios) en la base de datos
-        // Person.find({})
-        // .then((persons) => {
-        //     if (!persons || persons.length === 0) {
-        //     return respondError(req, res, 404, "No se encontraron usuarios");
-        //     }
-        //     // Envio de correo a cada usuario con un listado de las becas disponibles
-        //     persons.forEach((user) => {
-        //         // Datos de usuario a enviar correo
-        //         let nameUser = user["name"];
-        //         let emailUser = user["email"];
-        //         // Mensaje para enviar a usuario
-        //         let message = `Hola ${nameUser}, se ha creado una nueva beca ${body.name}. Aquí están todas las becas disponibles:\n`;
-        //         // Recorrido de becas para agregarlas al mensaje
-        //         allGrants.forEach((grant) => {
-        //             message += `- ${grant.name} - Monto: ${grant.amount}\n`;
-        //         });
-        //         // Envio de correo a usuario
-        //         NodeMailer.enviarEmail(emailUser, "Nueva beca creada", message);
-        //     });
-        // })
-        // .catch((error) => {
-        //     console.error("Error al obtener los usuarios:", error);
-        //     return respondError(req, res, 500, "Error al obtener los usuarios");
-        // });
+        // Obtencion de becas en la base de datos
+        const [allGrants, errorGrants] = await GrantService.getGrants();
+        if (errorGrants) {
+            return respondError(
+                res,
+                500,
+                "Error al obtener las becas",
+                errorGrants
+            );
+        }
+        // Busqueda de personas (usuarios) en la base de datos
+        Person.find({})
+        .then((persons) => {
+            if (!persons || persons.length === 0) {
+            return respondError(req, res, 404, "No se encontraron usuarios");
+            }
+            // Envio de correo a cada usuario con un listado de las becas disponibles
+            persons.forEach((user) => {
+                // Datos de usuario a enviar correo
+                let nameUser = user["name"];
+                let emailUser = user["email"];
+                // Mensaje para enviar a usuario
+                let message = `Hola ${nameUser}, se ha creado una nueva beca ${body.name}. Aquí están todas las becas disponibles:\n`;
+                // Recorrido de becas para agregarlas al mensaje
+                allGrants.forEach((grant) => {
+                    message += `- ${grant.name} - Monto: ${grant.amount}\n`;
+                });
+                // Envio de correo a usuario
+                NodeMailer.enviarEmail(emailUser, "Nueva beca creada", message);
+            });
+        })
+        .catch((error) => {
+            console.error("Error al obtener los usuarios:", error);
+            return respondError(req, res, 500, "Error al obtener los usuarios");
+        });
     } catch(error) {
         handleError(error, "grant.controller -> createGrant");
         respondError(req, res, 400, error.message);

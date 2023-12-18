@@ -16,3 +16,11 @@ export const getPersonById = async (id) => {
         console.log('Error en person.service -> getPersonById', error.message);
     }
 };
+
+export const getPersonsWithGrants = async () => {
+    try {
+        return axios.get(`/personGrants`);
+    } catch (error) {
+        console.log('Error en person.service -> getPersonsWithGrants', error.message);
+    }
+}

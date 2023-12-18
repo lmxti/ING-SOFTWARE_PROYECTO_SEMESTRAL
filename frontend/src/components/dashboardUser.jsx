@@ -1,8 +1,15 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { useAuth } from '../context/AuthContext';
 
 const dashboardUser = () => {
     const router = useRouter();
+
+    const { user: currentUser } = useAuth();
+    
+
+    console.log(currentUser);
+
 
     // Funcion para ir a la pagina de postulaciones
     const postularBecas = () => {
@@ -12,6 +19,10 @@ const dashboardUser = () => {
     // Funcion para ir a la pagina de becas
     const verBecas = () => {
         router.push("/grant")
+    };
+
+    const revisarSolicitud = () => {
+        router.push(`/applications/${currentUser.id}`)
     };
 
   return (
@@ -33,9 +44,9 @@ const dashboardUser = () => {
             </div>
 
             {/* Carta de Historial */}
-            <div className="bg-white p-4 rounded-lg shadow-md cursor-pointer">
-                <h3 className="text-lg font-semibold mb-4">Historial</h3>
-                <p className="text-gray-600">Tu historial y actividades anteriores.</p>
+            <div className="bg-white p-4 rounded-lg shadow-md cursor-pointer" onClick={revisarSolicitud}>
+                <h3 className="text-lg font-semibold mb-4">Revisa tus solicitudes</h3>
+                <p className="text-gray-600">Puedes ver el estado de tu solicitud</p>
             </div>
         </div>
   </div>

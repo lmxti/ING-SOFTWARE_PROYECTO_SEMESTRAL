@@ -24,3 +24,12 @@ export const updateApplication = async (id, formData) => {
         console.log('Error en application.service -> updateApplication', error);
     }
 }
+
+
+export const getApplicationPerson = async (id) => {
+    try {
+        return axios.get(`/applications/aplicationPerson/${id}/person`);
+    } catch (error) {
+        console.log('Error en application.service -> getApplicationPerson', error.message);
+    }
+}

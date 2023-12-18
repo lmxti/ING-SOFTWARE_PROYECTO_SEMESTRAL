@@ -9,7 +9,6 @@ const ShowUser = () => {
   const router = useRouter();
 
   const { user: currentUser } = useAuth();
-  console.log("Este es el currentUser: ", currentUser.id);
   
   // const emailLetter = currentUser.email[0]?.toUpperCase();
 

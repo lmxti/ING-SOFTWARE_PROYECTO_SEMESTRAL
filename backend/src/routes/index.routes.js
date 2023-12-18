@@ -6,6 +6,8 @@ const express = require("express");
 const personRoutes = require("./person.routes.js");
 const authRoutes = require("./auth.routes.js");
 const grantRoutes = require("./grant.routes.js");
+const personWithGrantsRoutes = require("./personWithGrants.routes.js");
+
 const appealRoutes = require("./appeal.routes.js");
 const reviewRoutes = require("./reviewGrant.routes.js");
 const applicationRoutes = require("./application.routes.js");
@@ -27,10 +29,16 @@ router.use("/grants", authenticationMiddleware, grantRoutes);
 
 router.use("/requirements", authenticationMiddleware, requirementRoutes);
 
+router.use("/personGrants",authenticationMiddleware, personWithGrantsRoutes)
 
 // RUTAS DE DOMINGO
 router.use("/applications", authenticationMiddleware, applicationRoutes);
 router.use("/pdf", authenticationMiddleware, pdfRoutes);
+
+
+
+
+
 
 // RUTAS DE JOHAN
 router.use("/appeals", authenticationMiddleware, appealRoutes);

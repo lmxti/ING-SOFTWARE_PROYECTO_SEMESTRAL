@@ -107,10 +107,34 @@ async function getApplicationById(req, res) {
   }
 }
 
+
+// Funcion para encontrar la solicitud de beca por el id de la persona
+async function getApplicationPersonID(req, res) {
+  try {
+    const { params } = req;
+    const { id } = params;
+    console.log("id de la persona: ", id);
+    const [application, applicationError] =await ApplicationService.getApplicationByIdPerson(id);
+    // Si ocurre un error
+    if (applicationError) {
+      return respondError(req, res, 400, applicationError);
+    }
+    // Si no se encuentra la solicitud
+    if (!application) {
+      return respondError(req, res, 400, "No se encontro la solicitud");
+    }
+    respondSuccess(req, res, 200, application);
+  } catch (error) {
+    
+  }    
+}
+
+
 module.exports = {
   createApplication,
   getApplications,
   updateApplication,
   deleteApplication,
   getApplicationById,
+  getApplicationPersonID,
 };

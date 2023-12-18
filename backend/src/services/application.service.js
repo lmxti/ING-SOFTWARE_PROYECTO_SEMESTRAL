@@ -1,7 +1,8 @@
-const Application = require('../models/application.model.js');
 const { handleError } = require('../utils/errorHandler.js');
+const Application = require('../models/application.model.js');
 const Person = require('../models/person.model.js');
 const Grant = require('../models/grant.model.js');
+const PersonWithGrant = require('../models/personWithGrants.js');
 
 async function createApplication(email, solicitudData) {
     try {
@@ -98,12 +99,40 @@ async function updateApplication(id, updateFields) {
 
         Object.assign(application, updateFields);
         const updatedApplication = await application.save();
-        // Retorno de datos
+
+        if(updateFields.status === 'Aceptado'){
+          createPersonWithGrant(application.person.email, application.grant);
+        }
+
         return [updatedApplication, null];
     }catch(error){
         handleError(error, 'application.service -> updateApplication');
     }
 }
+
+async function createPersonWithGrant(person_email, grant_id) {
+  try {
+    // Buscar persona por email
+    const PersonFound = await Person.findOne({ email: person_email });
+
+    // Verificar si ya existe un registro para la persona y la beca
+    const existingRecord = await PersonWithGrant.findOne({
+      person: PersonFound._id,
+      grant: grant_id,
+    });
+
+    if (!existingRecord) {
+      // Crear el nuevo registro solo si no existe
+      await new PersonWithGrant({
+        person: PersonFound._id,
+        grant: grant_id,
+      }).save();
+    }
+  } catch (error) {
+    handleError(error, 'application.service -> createPersonWithGrant');
+  }
+}
+
 
 async function deleteApplication(application){
     try{
@@ -127,10 +156,30 @@ async function getApplicationById(application){
     }
 }
 
+
+// Busqueda de postulacion por id de persona (Se debe ajustar el modelo de postulacion(application) para usarlo)
+async function getApplicationByIdPerson(idPerson){
+    try{
+        // Busqueda de postulacion
+        const applicationFound = await Application.findOne({"person._id": idPerson}).populate('person', '-password -_id -role').populate('grant', '-_id -state -__v');
+        // Retorno de datos
+
+        console.log("xd",applicationFound);
+
+        return [applicationFound, null];
+    }catch(error){
+        handleError(error, 'application.service -> getApplicationByIdPerson');
+    }
+}
+
+
+
+
 module.exports = {
     createApplication,
     getApplications,
     updateApplication,
     deleteApplication,
     getApplicationById,
+    getApplicationByIdPerson
 }
